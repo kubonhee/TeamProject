@@ -1,0 +1,67 @@
+package net.yangchoo.service;
+
+import java.util.List;
+import java.util.Map;
+
+import net.yangchoo.domain.ChatContentsVO;
+import net.yangchoo.domain.ChatVO;
+import net.yangchoo.domain.MemberVO;
+
+public interface ChatService {
+	
+////	// 로그인한 유저의 정보 얻기
+////	public Map<String, MemberVO> getMemberInfo(String chatId);
+//	
+//	// 첫 채팅방 생성
+//	public int chatFirstInsert(String chatId);
+//	
+//	// 상대 채팅방 생성
+//	public int chatTargetInsert(Integer chatRoomNo, String chatId);
+//	
+//	// 채팅방 유저 전체 조회
+//	public List<ChatVO> chatRoomSelectAll(String chatId);
+//	
+//	// 현재 마지막 방 번호 조회
+//	public String chatGetCurrentChatRoomNo();
+//	
+//	// 채팅방 중복 체크
+//	public boolean duplicateCheck(String chatId, String chatTargetId);
+//	
+//	// 특정 채팅방 조회
+//	public ChatVO chatSelectOne(int chatRoomNo);
+//	
+//	// 채팅방 업데이트
+//	public int chatUpdate(ChatVO chatVO);
+//	
+//	// 채팅방 삭제
+//	public int chatDelete(int chatRoomNo);
+//	
+//	// 메시지 전송
+//	int chatMessageInsert(ChatContentsVO chatContentsVO);
+//	
+//	// 메세지 전체 조회
+//	List<ChatContentsVO> chatMessageSelectAll();
+//	
+//	// 특정 방번호에 대한 메시지 전체 조회
+//	List<ChatContentsVO> chatRoomNoSelectAll(Integer chatRoomNo);
+//	
+//	// 특정 메세지 조회
+//	ChatContentsVO chatMessageSelectOne(int chatContentsNo);
+//	
+//	// 메세지 수정
+//	int chatMessageUpdate(ChatContentsVO chatContentsVO);
+//	
+//	// 메세지 삭제
+//	int chatMessageDelete(int chatContentsNo);
+//	
+////	// 메세지 수신여부 체크
+////	public int chatMessageReadChat(ChatContentsVO chatContentsVO);
+////	
+////	// 메세지 읽지 않은 메세지 개수
+////	public int chatRoomNoReadCount(ChatContentsVO chatContentsVO);
+////	
+////	// 메시지 전체 유저 읽지 않은 메세지 개수
+////	public List<ChatContentsVO> chatAllNotReadMessage(ChatContentsVO chatContentsVO);
+////	
+////	public List<ChatContentsCountVO> chatAllNotReadCount(String userId);
+}

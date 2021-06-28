@@ -1,0 +1,23 @@
+package net.yangchoo.controller;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+/** 
+ * 작성자 : 구본희
+ * 약관동의 페이지
+ */
+@Controller
+public class LoginController {
+	/**
+	 * 약관동의 페이지
+	 * 
+	 * 
+	 * */
+	
+	/*@RequestMapping(value = "/memberTerms")
+	public String terms() {
+		
+		return "memberTerms";
+	}*/
+}

@@ -1,0 +1,190 @@
+package net.yangchoo.controller;
+
+
+import java.io.File;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import lombok.AllArgsConstructor;
+import lombok.extern.log4j.Log4j;
+import net.yangchoo.domain.BoardAttachVO;
+import net.yangchoo.domain.BoardVO;
+import net.yangchoo.domain.Criteria;
+import net.yangchoo.domain.PageDTO;
+import net.yangchoo.service.BoardService;
+
+@Controller
+@Log4j
+@RequestMapping("/board/*")
+@AllArgsConstructor
+public class BoardController {
+	
+	private BoardService service;
+	
+	
+	/*//페이지(더보기) (9개씩 되도록) 나중에 로그인이후 위에것과 바꿔 사용
+	@GetMapping({"more/{writer}", "more/{bno}/{writer}"})
+	@PreAuthorize("isAuthenticated()")
+	public ResponseEntity<List<BoardVo>> getListMore(@PathVariable Optional<Long> bno, @PathVariable String writer){
+		log.info("getListMore...");
+		log.info("bno :: " + bno);
+		return new ResponseEntity<>(service.getListMore(bno.isPresent() ? bno.get() : null, writer), HttpStatus.OK);
+	}*/
+	//페이지(더보기) (9개씩 되도록 BoardMapper.xml에서지정해둠)
+	
+//게시판 관련-----------------------------------------------------------------------------------------------	
+	//목록조회
+	@GetMapping("shop")
+	public String list(Criteria cri, Model model){
+		log.info("list....");
+		model.addAttribute("list",service.getList(cri));
+		model.addAttribute("pageMaker",new PageDTO(cri, service.getTotal(cri)));
+		return "/board/shop";
+	}
+	
+	//조회
+	@PreAuthorize("isAuthenticated()")
+	@GetMapping("{bno}") @ResponseBody
+	public ResponseEntity<BoardVO> get(@PathVariable Long bno) {
+		log.info(bno);
+		return new ResponseEntity<BoardVO>(service.get(bno),HttpStatus.OK);
+	}
+	
+	//상세조회
+	@PreAuthorize("isAuthenticated()")
+	@GetMapping({"details/{bno}"})
+	public String get(@PathVariable Long bno, @ModelAttribute("cri") Criteria cri, Model model){
+		log.info("details....");
+		model.addAttribute("board",service.get(bno));
+		model.addAttribute("cri",cri);
+		return "board/details";
+	}
+	
+	//페이지(더보기) (9개씩 되도록 BoardMapper.xml에서지정해둠)
+	@GetMapping({"more", "more/{bno}"}) @ResponseBody
+	public ResponseEntity<List<BoardVO>> getListMore(@PathVariable Optional<Long> bno, Authentication auth, Model model){
+		//Principal: CustomUser(vo=MemberVO(userEmail=tnqhd1212@naver.com, userPw=$2a$10$8t/m4j3I7fWZOyZuiKL8LeNic9h4h8AyCAcYLcXBsdCg1eJLI2E02, userName=양수봉, postCode=31151, roadAddress=충남 천안시 동남구 미라4길 54, jibunAddress=충남 천안시 동남구 쌍용동 556-6, extraAddress=null, latitude=36.822854500000005, longitude=127.13656990000001, birthDate=2021-05-28, regDate=null, updateDate=null, enabled=false, authList=[AuthVO(userEmail=tnqhd1212@naver.com, userAuth=ROLE_ADMIN)])); Credentials: [PROTECTED]; Authenticated: true; Details: org.springframework.security.web.authentication.WebAuthenticationDetails@fffbcba8: RemoteIpAddress: 0:0:0:0:0:0:0:1; SessionId: 76BE6CDDFA83F95DBFB83FB064D7EE6E; Granted Authorities: ROLE_ADMIN
+		log.info("auth/auth/auth/auth/auth" + auth.getPrincipal());
+		log.info("getListMore...");
+		log.info("bno :: " + bno);
+		return new ResponseEntity<>(service.getListMore(bno.isPresent() ? bno.get() : null), HttpStatus.OK);
+	}
+	
+	@GetMapping({"near/nearList/{latitude}/{longitude}"}) @ResponseBody
+	public ResponseEntity<List<BoardVO>> nearList(@PathVariable String latitude,@PathVariable String longitude, Authentication auth, Model model){
+		log.info("nearList...");
+		log.info("latitude :: " + latitude);
+		log.info("longitude :: " + longitude);
+		model.addAttribute("auth", auth);
+		return new ResponseEntity<>(service.nearList(latitude,longitude), HttpStatus.OK);
+//		return new ResponseEntity<>(service.categoryList(category.isPresent() ? category.get() : null), HttpStatus.OK);
+	}
+	
+	//카테고리 목록조회
+	@GetMapping({"category/{category}"}) @ResponseBody
+	public ResponseEntity<List<BoardVO>> categoryList(@PathVariable Optional<Long> category){
+		log.info("categoryList...");
+		log.info("category :: " + category);
+		return new ResponseEntity<>(service.categoryList(category.isPresent() ? category.get() : null), HttpStatus.OK);
+	}
+	
+	//글 작성
+	@GetMapping("register")
+	@PreAuthorize("isAuthenticated()")
+	public String register(){
+		return "/board/register";
+	}
+	
+	@PreAuthorize("isAuthenticated()")
+	@PostMapping("register")
+	public String register(BoardVO boardVO, RedirectAttributes rttr){
+		log.info("register...");
+		log.info(boardVO);
+		boardVO.getAttachList().forEach(log::info);
+		service.register(boardVO);
+		rttr.addFlashAttribute("result", boardVO.getBno());
+		
+		return "index";
+	}	
+	
+	//게시글 수정
+	@GetMapping({"modify/{bno}"})
+	public String modify(@PathVariable Long bno, @ModelAttribute("cri") Criteria cri, Model model){
+		log.info("modify....");
+		model.addAttribute("board",service.get(bno));
+		model.addAttribute("cri",cri);
+		return "board/modify";
+	}
+	//수정
+	@PreAuthorize("principal.username == #boardVO.writer")
+	@PostMapping("modify/{bno}")
+	public String modify(BoardVO boardVO, @ModelAttribute("cri") Criteria cri, RedirectAttributes rttr){
+		log.info("modify...");
+		log.info(boardVO);
+		boardVO.getAttachList().forEach(log::info);
+		if(service.modify(boardVO)){
+			rttr.addFlashAttribute("result", "success");
+		}
+		return "redirect:/board/details/" + boardVO.getBno();
+		//수정 완료후 수정한 글의 상세보기로 이동해주고 그 글번호를 지정해서 리턴!!
+	}
+	
+	//게시글 삭제
+	@PreAuthorize("principal.username == #writer")
+	@PostMapping("remove")
+	public String remove(String writer, @RequestParam Long bno, @ModelAttribute("cri") Criteria cri, RedirectAttributes rttr){
+		
+		log.info("remove...");
+		
+		List<BoardAttachVO> list = service.getAttachList(bno);		
+		if(service.remove(bno)){
+			deleteFile(list);
+			rttr.addFlashAttribute("result", "success");
+		}
+		return "redirect:/";
+	}
+	
+//파일 첨부 관련-----------------------------------------------------------------------------------------------
+	//파일첨부 목록조회
+	
+	@ResponseBody
+	@GetMapping("getAttachList")
+	public List<BoardAttachVO> getAttachList(Long bno) {
+		log.info("getAttachList...." + bno);
+		return service.getAttachList(bno);
+	}
+	
+	//파일첨부 삭제 
+	private void deleteFile(List<BoardAttachVO> attachList) {
+		 log.info("deleteFile.........");
+		 log.info(attachList);
+
+		 attachList.forEach(attach-> {
+			 new File(UploadController.UPLOAD_PATH, attach.getDownPath()).delete();
+			 if(attach.isImage()) {
+				 new File(UploadController.UPLOAD_PATH, attach.getThumbPath()).delete();
+			 }
+		 });
+	}
+}

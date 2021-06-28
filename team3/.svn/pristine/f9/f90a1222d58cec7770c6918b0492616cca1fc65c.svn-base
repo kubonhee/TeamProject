@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="net.yangchoo.mapper.ChatMapper">
+
+	<resultMap type="net.yangchoo.domain.ChatVO" id="chatMap">
+		<id property="chatRoomNo" column="CHAT_ROOM_NO"/>
+		<result property="chatRoomNo" column="CHAT_ROOM_NO"/>
+		<result property="chatId" column="CHAT_ID"/>
+		<result property="chatDate" column="CHAT_DATE"/>
+		<collection property="chatContents" resultMap="contentsMap"/>
+	</resultMap>
+	
+	<resultMap type="net.yangchoo.domain.ChatContentsVO" id="contentsMap">
+		<result property="chatRoomNo" column="CHAT_ROOM_NO"/>
+		<result property="chatContentsNo" column="CHAT_CONTENTS_NO"/>
+		<result property="chatContentsMessage" column="CHAT_CONTENTS_MESSAGE"/>
+		<result property="chatContentsDate" column="CHAT_CONTENTS_DATE"/>
+		<result property="chatSenderId" column="CHAT_SENDER_ID"/>
+	</resultMap>
+	
+	<!-- 최초 채팅방 생성 -->
+	<insert id="chatRoomInsert">
+		INSERT INTO CHAT (CHAT_NO, CHAT_ROOM_NO, CHAT_ID)
+		VALUES (SEQ_CHATNO.NEXTVAL, SEQ_CHATROOM.NEXTVAL, #{chatId})
+	</insert>
+	
+	<!-- 상대방 채팅방 생성 -->
+	<insert id="chatRoomTargetInsert">
+		INSERT INTO CHAT (CHAT_NO, CHAT_ROOM_NO, CHAT_ID)
+		VALUES (
+		SEQ_CHATNO.NEXTVAL,
+		    (
+		        SELECT chat_room_no
+		        FROM CHAT
+		        WHERE CHAT_ROOM_NO = #{chatRoomNo}
+		    ),
+		#{chatId})
+	</insert>
+	
+	<!-- 채팅방 유저 전체 조회 -->
+	<select id="chatRoomSelectAll">
+		SELECT cc.chat_sender_id
+    		FROM CHAT c
+    		join chat_contents cc
+    		on c.chat_room_no = cc.chat_room_no
+    		where CHAT_ID = #{chatId};
+	</select>
+	
+	<!-- 현재 마지막 방 번호 조회 -->
+	<select id="ChatRoomGetCurrentNo">
+		SELECT SEQ_CHATROOM.CURRVAL
+		FROM DUAL
+	</select>
+	
+	<!-- 채팅방 삭제 -->
+	<delete id="chatRoomDelete">
+		DELETE FROM CHAT
+		WHERE CHAT_ROOM_NO = #{chatRoomNo}
+		AND CHAT_ID = #{chatId};
+	</delete>
+	
+</mapper> 

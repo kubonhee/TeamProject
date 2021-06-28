@@ -1,0 +1,40 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ page session="false" %>
+<html>
+<head>
+	<title>do it</title>
+	<script  src="http://code.jquery.com/jquery-latest.min.js"></script>
+</head>
+<body>
+		<button class="btn btn-primary" id="googleLoginBtn">구글 로그인</button>
+		
+</body>
+	<script>
+		 
+		$("#googleLoginBtn").on("click", function () {
+			window.location.replace(
+					"https://accounts.google.com/o/oauth2/v2/auth?"+
+			 		"client_id=1015554852025-5uhhbn8qftl60g0dba2g3q1hc1k76u2m.apps.googleusercontent.com&"+
+					"redirect_uri=http://localhost:8080/google/auth&"+
+					"response_type=code&"+
+					"scope=https://www.googleapis.com/auth/userinfo.email&"+
+					"https://www.googleapis.com/auth/userinfo.profile&"+
+					"openid&"+
+					"access_type=offline");
+		})		
+		
+		/* $("#googleLoginBtn").on("click", function () {
+			window.location.replace(
+					"https://accounts.google.com/o/oauth2/v2/auth?"+
+			 		"client_id=1015554852025-5uhhbn8qftl60g0dba2g3q1hc1k76u2m.apps.googleusercontent.com&"+
+					"redirect_uri=http://localhost:8080/google-login"+
+					"response_type=id_token&"+
+					"scope= https://www.googleapis.com/auth/userinfo.email&"+
+					"https://www.googleapis.com/auth/userinfo.profile&"+
+					"openid&"+
+					"access_type=offline");
+		})		 */
+	</script>
+</html>

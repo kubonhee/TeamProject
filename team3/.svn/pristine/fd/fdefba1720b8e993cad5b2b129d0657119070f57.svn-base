@@ -1,0 +1,21 @@
+package net.yangchoo.domain;
+
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+public class ChatRoomVO {
+	private String roomNo;			// 방번호
+	 
+	private String userEmail;		// 사용자 이메일
+	private String userName;		// 사용자 이름
+	
+	private String targetEmail;		// 상대방 이메일
+	private String targetName;		// 상대방 이름
+	
+	private int unReadCount;		// 안 읽은 메세지 수
+	
+}

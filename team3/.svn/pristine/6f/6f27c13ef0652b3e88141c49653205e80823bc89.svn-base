@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="net.yangchoo.mapper.MemberMapper">
+<!-- <resultMap type="xyz.younis.domain.MemberVO" id="memberMap">
+		<id property="userEmail" column="userEmail"/>
+		<result property="userPw" column="userPw"/>
+		<result property="userLOC" column="userLOC"/>
+		<result property="userName" column="userName"/>
+		<result property="regDate" column="regDate"/>
+		<result property="updateDate" column="updateDate"/>
+		<collection property="authList" resultMap="authMap" />
+	</resultMap> -->
+	
+	<!-- 회원가입 -->
+	<insert id="register">
+		INSERT INTO MEMBER( USEREMAIL,
+							USERPW,
+							USERNAME,
+							BIRTHDATE,
+							POSTCODE,
+							ROADADDRESS,
+							JIBUNADDRESS,
+							EXTRAADDRESS
+							)
+					VALUES( #{userEmail},
+							#{userPw},
+							#{userName},
+							#{birthDate},
+							#{postCode},
+							#{roadAddress},
+							#{jibunAddress},
+							#{extraAddress}
+							)
+	</insert>
+
+
+</mapper>

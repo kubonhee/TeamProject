@@ -1,0 +1,140 @@
+/**
+ * board module
+ */
+console.log("board module.....");
+
+var boardService = (function() {
+	return {
+		add: function(board, callback, error){
+			console.log("board.add()...........");
+			
+			$.ajax({
+				type: "post",
+				url : "/board/register",
+				data : JSON.stringify(board),
+				contentType : "application/json; charset=utf-8",
+				success : function(result, status, xhr){
+					if(callback) {
+						callback(result);
+					}
+				},
+				error : function(xhr, status, er) {
+					if(error) {
+						error(er);
+					}
+				}
+			});	
+		},
+		getListMore: function(param, callback, error) {
+			console.log(param)
+			var bno = param.bno;
+			var url = "/board/more/" + bno;
+		
+			console.log("getListMore url :: " + url)
+			$.getJSON(url, function(result) {
+				if(callback) {
+					callback(result);
+				}
+			}).fail(function(xhr, status, er) {
+				if(error) {
+					error(er);
+				}	
+			});
+ 		},
+ 		
+		remove: function(bno, callback, error) {
+			var url = "/board/" + bno
+			$.ajax({
+				type : "delete",
+				url : url,
+				success : function(result){
+					if(callback) {
+						callback(result);
+					}
+				},
+				error : function(xhr, status, er) {
+					if(error) {
+						error(er);
+					}
+				}
+			})
+			
+		},
+		update: function(board, callback, error) {
+			var url = "/board/" + board.bno
+			$.ajax({
+				type: "put",
+				url : url,
+				data : JSON.stringify(board),
+				contentType : "application/json; charset=utf-8",
+				success : function(result, status, xhr){
+					if(callback) {
+						callback(result);
+					}
+				},
+				error : function(xhr, status, er) {
+					if(error) {
+						error(er);
+					}
+				}
+			});
+		},
+		categoryList: function(param, callback, error) {
+ 			console.log(param)
+ 			var category = param.category;
+ 			var url = "/board/category/" + category;
+ 			
+ 			console.log("categoryList url :: " + url)
+ 			$.getJSON(url, function(result) {
+ 				if(callback) {
+ 					callback(result);
+ 				}
+ 			}).fail(function(xhr, status, er) {
+ 				if(error) {
+ 					error(er);
+ 				}	
+ 			});
+ 		},
+		get: function(bno, callback, error) {
+			var url = "/board/" + bno
+			$.getJSON(url, function(result) {
+				if(callback) {
+					callback(result);
+				}
+			}).fail(function(xhr, status, er) {
+				if(error) {
+					error(er);
+
+				}
+			});
+		},
+		displayTime: function(timeValue){
+			//var today = moment(new Date());
+			//var dateObj = moment(timeValue);
+			
+			//return today.diff(dateObj, 'days') < 1 ? dateObj.format("hh:mm:ss") : dateObj.format("yy/MM/DD")
+			return moment(timeValue).fromNow();
+		},
+		
+		getBoardDom: function(param) {
+			str = "";
+			str += '<div class="row container-lg p-2 m-0">';
+			for(var i in param) {
+				str += '<div class="boardDiv col-sm-6 col-md-4 p-0" data-bno =' + param[i].bno + '>';
+				str += 		'<a href="board/details/' + param[i].bno + '">';
+				str += 			'<img src="/resources/img/bg-img/1.jpg" alt="">';
+				str += 			'<div class="hover-content">';
+				str += 				'<div class="line"></div>';
+				str += 					'<p>'+ param[i].price +'</p>';
+				str += 					'<h4>' + param[i].title + '</h4>';
+				str += 			'</div>';
+				str += 		'</a>';
+				str += '</div>';
+			}
+			str += '</div><div class="row">';
+			str += '</div>';
+			return str;
+		}
+		
+	}; 
+})(); // 타입 언디파인드

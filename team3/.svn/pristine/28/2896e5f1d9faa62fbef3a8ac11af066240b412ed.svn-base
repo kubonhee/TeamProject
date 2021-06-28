@@ -1,0 +1,32 @@
+package net.yangchoo.mapper;
+
+import java.util.List;
+
+import org.apache.ibatis.annotations.Param;
+
+import net.yangchoo.domain.ChatVO;
+
+public interface ChatMapper {
+	
+	/*
+	 * 채팅방 
+	 */
+	// 채팅방 생성
+	public int chatRoomInsert(String chatId);
+	
+	// 상대방 채팅방 생성
+	public int chatRoomTargetInsert(@Param("chatId") String chatId, @Param("targetId") String targetId);
+	
+	// 채팅방 유저 전체 조회
+	public List<ChatVO> chatRoomSelectAll(String chatId);
+	
+	// 현재 마지막 방 번호 조회
+	public Integer ChatRoomGetCurrentNo();
+	
+	// 채팅방 업데이트
+	//public int chatRoomUpdate(int chatRoomNo);
+	
+	// 채팅방 삭제
+	public int chatRoomDelete(int chatRoomNo);
+	
+}

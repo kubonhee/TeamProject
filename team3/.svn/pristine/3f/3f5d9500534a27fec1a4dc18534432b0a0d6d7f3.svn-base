@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- <mapper namespace="net.yangchoo.mapper.MemberMapper">
+ <resultMap type="xyz.younis.domain.MemberVO" id="memberMap">
+		<id property="userEmail" column="userEmail"/>
+		<result property="userPw" column="userPw"/>
+		<result property="userLOC" column="userLOC"/>
+		<result property="userName" column="userName"/>
+		<result property="regDate" column="regDate"/>
+		<result property="updateDate" column="updateDate"/>
+		<collection property="authList" resultMap="authMap" />
+	</resultMap> -->
+	
+<mapper namespace="net.yangchoo.mapper.MemberMapper">
+	<resultMap type="net.yangchoo.domain.MemberVO" id="memberMap">
+		<id property="userEmail" column="useremail"/>
+		<result property="userPw" column="userpw"/>
+		<result property="userName" column="username"/>
+		<result property="postCode" column="postcode"/>
+		<result property="roadAddress" column="roadaddress"/>
+		<result property="jibunAddress" column="jibunaddress"/>
+		<result property="birthDate" column="birthdate"/>
+		
+		<collection property="authList" resultMap="authMap" />
+	</resultMap>
+		
+	<resultMap type="net.yangchoo.domain.AuthVO" id="authMap">
+		<result property="userEmail" column="useremail"/>
+		<result property="userAuth" column="userauth"/>
+	</resultMap>
+	
+	<select id="read" resultMap="memberMap">
+	SELECT * 
+	FROM MEMBER
+	JOIN MEMBER_AUTH
+	USING (USEREMAIL)
+	WHERE USEREMAIL = #{userEmail}
+	</select>
+	
+	<!-- 회원가입 -->
+	<insert id="register">
+		INSERT INTO MEMBER( USEREMAIL,
+							USERPW,
+							USERNAME,
+							BIRTHDATE,
+							POSTCODE,
+							ROADADDRESS,
+							JIBUNADDRESS,
+							EXTRAADDRESS
+							)
+					VALUES( #{userEmail},
+							#{userPw},
+							#{userName},
+							#{birthDate},
+							#{postCode},
+							#{roadAddress},
+							#{jibunAddress},
+							#{extraAddress}
+							)
+	</insert>
+	<!--  권한 부여 -->
+	<insert id="insertAuth">
+		INSERT INTO MEMBER_AUTH(USEREMAIL,
+								USERAUTH)
+						VALUES( #{userEmail},
+								#{userAuth}
+								)
+	</insert>
+</mapper>

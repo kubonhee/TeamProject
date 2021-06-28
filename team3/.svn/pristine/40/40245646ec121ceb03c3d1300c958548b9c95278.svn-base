@@ -1,0 +1,89 @@
+package net.yangchoo.controller;
+
+import java.security.Principal;
+import java.util.List;
+import java.util.Map;
+
+import javax.servlet.http.HttpSession;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.web.authentication.WebAuthenticationDetails;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import lombok.extern.log4j.Log4j;
+import net.yangchoo.domain.ChatContentsVO;
+import net.yangchoo.domain.ChatVO;
+import net.yangchoo.domain.MemberVO;
+import net.yangchoo.mapper.MemberMapper;
+import net.yangchoo.service.ChatService;
+
+@Controller
+@Log4j
+public class ChatController {
+	@Autowired
+	private ChatService chatService;
+	
+	@RequestMapping(value = "/chattest")
+	public String chatTest() {
+		return "chat";
+	}
+	
+	// 아이디 체크
+	@ResponseBody
+	@RequestMapping(value = "/sessionCheck", method = RequestMethod.POST)
+	public String SessionCheck(Principal principal, HttpSession session) {
+		String userEmail = principal.getName();
+		Map<String, MemberVO> memberInfo = chatService.getMemberInfo(userEmail);
+		String chatId = memberInfo.get("Member").getUserEmail();
+		session.setAttribute("chatId", chatId);
+		log.info(principal.getName());
+		log.info(principal.getClass());
+		log.info(chatId);
+		log.info(session.getAttribute("chatId"));
+		
+		return chatId;
+	}
+	
+	// 채팅방 생성(완)
+	@ResponseBody
+	@RequestMapping(value = "/createChatRoom")
+	public Boolean createChatRoom(@RequestParam("chatId") String chatId, @RequestParam("targetId") String targetId) {
+		log.info("createChatRoom() :: " + chatId + "::" + targetId);
+		return chatService.createChatRoom(chatId, targetId);
+	}
+	
+	// 해당 유저의 채팅방 조회(쿼리문 수정하기)
+	@RequestMapping(value = "/readChatRoom", method = RequestMethod.GET)
+	public String readChatRoom(Principal principal, HttpSession session) {
+		String chatId = principal.getName();
+		List<ChatVO> chatRoomList = chatService.chatRoomSelectAll(chatId);
+		log.info(chatId);
+		session.setAttribute("chatId", chatId);
+		session.setAttribute("chatRoomList", chatRoomList);
+		log.info(session.getAttribute("chatId"));
+		log.info(session.getAttribute("chatRoomList"));
+		return "message";
+	}
+	
+	// 해당 채팅방의 채팅내용 조회
+	@ResponseBody
+	@RequestMapping(value = "/readMessage")
+	public List<ChatContentsVO> readMessage(@RequestParam("chatRoomNo") int chatRoomNo) {
+		return chatService.chatRoomSelectOne(chatRoomNo);
+	}
+	
+	// 채팅 입력
+	
+	
+	// 채팅방 삭제
+	@ResponseBody
+	@RequestMapping(value = "/deleteChatRoom", method = RequestMethod.POST)
+	public int deleteChatRoom(@RequestParam("chatRoomNo") int chatRoomNo, @RequestParam("chatId") String chatId) {
+		return chatService.chatRoomDelete(chatRoomNo, chatId);
+	}
+}

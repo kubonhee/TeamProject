@@ -1,0 +1,58 @@
+package net.yangchoo.service;
+
+import java.util.List;
+
+import net.yangchoo.domain.ChatMessageVO;
+import net.yangchoo.domain.ChatRoomVO;
+
+public class ChatServiceImpl implements ChatService {
+//
+//	@Override
+//	public ChatRoomVO selectChatRoom(String roomId) {
+//		// TODO Auto-generated method stub
+//		return null;
+//	}
+//
+//	@Override
+//	public int insertMessage(ChatMessageVO chatMessage) {
+//		// TODO Auto-generated method stub
+//		return 0;
+//	}
+//
+//	@Override
+//	public List<ChatMessageVO> messageList(String roomId) {
+//		// TODO Auto-generated method stub
+//		return null;
+//	}
+//
+//	@Override
+//	public int createChat(ChatRoomVO room) {
+//		// TODO Auto-generated method stub
+//		return 0;
+//	}
+//
+//	@Override
+//	public ChatRoomVO searchChatRoom(ChatRoomVO room) {
+//		// TODO Auto-generated method stub
+//		return null;
+//	}
+//
+//	@Override
+//	public List<ChatRoomVO> chatRoomList(String userEmail) {
+//		// TODO Auto-generated method stub
+//		return null;
+//	}
+//
+//	@Override
+//	public int selectUnReadCount(ChatMessageVO message) {
+//		// TODO Auto-generated method stub
+//		return 0;
+//	}
+//
+//	@Override
+//	public int updateCount(ChatMessageVO message) {
+//		// TODO Auto-generated method stub
+//		return 0;
+//	}
+	
+}

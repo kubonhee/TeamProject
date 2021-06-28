@@ -1,0 +1,275 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
+<%@ taglib uri="http://www.springframework.org/security/tags" prefix="sec" %>
+<jsp:include page="../includes/header.jsp"/>
+        
+<script>
+showlocation()
+      var map = null;
+    function showlocation() {
+       // One-shot position request.
+    	navigator.geolocation.getCurrentPosition(callback);
+    }
+     
+    function callback(position) {
+       
+       var lat = position.coords.latitude;
+       var lon = position.coords.longitude;
+       
+       console.log(lat);
+       console.log(lon);
+     
+      document.getElementById('latitude').value = lat;
+      document.getElementById('longitude').value= lon;
+            
+      var latLong = new google.maps.LatLng(lat, lon);
+   
+      var marker = new google.maps.Marker({
+          position: latLong
+      });      
+ }
+</script>
+                <!-- Begin Page Content -->
+                <div class="container-fluid">
+
+                    <!-- Page Heading -->
+                   <h1 class="h3 text-center mt-3 mb-5"></h1>
+                    <!-- DataTales Example -->
+                    <div class="card">
+                        <div class="card-header py-3">
+                            <h3 class="m-0 text-center font-weight-bold text-success">상품 등록</h3>
+                        </div>
+                        <div class="card-body">
+							<form method="post" class="needs-validation" novalidate >
+								<div class="form-group">
+							    	<label for="category" class="font-weight-bold text-warning">Category:</label>
+							    	<select class="form-select form-select-sm category" id="category" name="category" aria-label=".form-select-lg example" required>
+							    		<option value="" disabled selected hidden>카테고리를 선택해주세요</option>
+										<option value="1">여성의류</option>
+										<option value="2">남성의류</option>
+										<option value="3">가전</option>
+										<option value="4">가구</option>
+									</select>
+								</div>
+								<div class="form-group form-inline">
+									<label for="price" class="font-weight-bold text-warning">price:</label>
+									<input type="text" class="form-control" id="price" placeholder="금액을 입력하세요" name="price" required />
+									<div class="valid-feedback">Valid.</div>
+									<div class="invalid-feedback">Please fill out this field.</div>
+									
+									<label for="writer" class="font-weight-bold text-warning">writer:</label>
+									<input type="text" class="form-control" id="writer" placeholder="작성자를 입력하세요" name="writer" required readonly value='<sec:authentication property="principal.username"/>' />
+									<div class="valid-feedback">Valid.</div>
+									<div class="invalid-feedback">Please fill out this field.</div>
+								</div>
+								<div class="form-group">
+									<label for="title" class="font-weight-bold text-warning">title</label>
+									<input type="text" class="form-control" id="title" placeholder="게시글 제목을 입력하세요" name="title" required />
+									<div class="valid-feedback">Valid.</div>
+									<div class="invalid-feedback">Please fill out this field.</div>
+								</div>
+								<div class="form-group">
+									<label for="title" class="font-weight-bold text-warning">content</label>
+									<textarea class="form-control" rows="10" id="content" placeholder="게시글 내용을 입력하세요" name="content" required ></textarea>
+									<div class="valid-feedback">Valid.</div>
+									<div class="invalid-feedback">Please fill out this field.</div>
+								</div>
+								<input type="hidden" class="form-control" id="latitude" placeholder="위도"/>
+								<input type="hidden" class="form-control" id="longitude" placeholder="경도"/>
+								<input class="btn btn-outline-info float-right ml-1" type="button" value="List" onclick="history.back()">
+								<button type="reset" class="btn btn-outline-secondary float-right">reset</button>
+								<button type="submit" class="btn btn-outline-success float-right mr-1">submit</button>
+								<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}">
+							</form>
+						</div>
+					</div>
+                    <div class="card mb-4">
+                        <div class="card-header py-3">
+                            <h6 class="m-0 font-weight-bold text-warning">Attach File</h6>
+                        </div>
+                        <div class="card-body">
+							<div class="uploadDiv">
+								<input id="files" type="file" name="files" accept="image/gif,image/jpeg,image/g,image/png" multiple>
+								<!--파일 첨부시 이미지만 보이게 accept="image/gif,image/jpeg,image/png"  -->
+							</div>
+							<div class="uploadResult">
+								<ul class="list-group list-group-horizontal">
+								
+								</ul>
+							</div>
+							<!-- Result Modal-->
+						    <div class="modal fade" id="imageModal">
+						        <div class="modal-dialog modal-xl">
+						            <div class="modal-content">
+						                <div class="modal-body text-center">
+						                	<img class="mw-100">
+						                </div>
+						            </div>
+						        </div>
+						    </div>
+                        </div>
+                    </div>
+                    
+					<script>
+					// Disable form submissions if there are invalid fields
+					(function() {
+					  'use strict';
+					  window.addEventListener('load', function() {
+					    // Get the forms we want to add validation styles to
+					    var forms = document.getElementsByClassName('needs-validation');
+					    // Loop over them and prevent submission
+					    var validation = Array.prototype.filter.call(forms, function(form) {
+					      form.addEventListener('submit', function(event) {
+					        if (form.checkValidity() === false) {
+					          event.preventDefault();
+					          event.stopPropagation();
+					        }
+					        form.classList.add('was-validated');
+					      }, false);
+					    });
+					  }, false);
+					})();
+					</script>
+					<script>
+					var regex = /(.*?)\.(exe|sh|jsp|php|jar)/gi; //이 파일들 업로드를 막기 위함
+					var maxSize = 1024 * 1024 * 5; //파일의 최대 크기 5M
+					var cloneObj = $(".uploadDiv").clone();
+					var uploadResult = $(".uploadResult ul");
+					var csrf = '${_csrf.headerName}';
+					var csrfToken = '${_csrf.token}'; 
+					
+					console.log(cloneObj);
+					$(".uploadDiv").on("change", "#files", function() {
+						var formData = new FormData();
+						var files = $("#files")[0].files;
+						console.log(files);
+						
+						for(var i in files) {
+							if(!checkExtension(files[i].name, files[i].size)){
+								$(".uploadDiv").html(cloneObj.html());
+								return false;
+							}
+							formData.append("files", files[i]);
+						}
+						console.log(formData);
+
+						$.ajax({
+							url : '${pageContext.request.contextPath}/uploadAction',
+							type : 'post',
+							data : formData,
+							beforeSend : function(xhr) {
+								xhr.setRequestHeader(csrf, csrfToken)
+							},
+							dataType : 'json',
+							processData : false,
+							contentType : false,
+							success : function(result){
+								console.log(result);
+								showUploadedFile(result);
+								$(".uploadDiv").html(cloneObj.html());
+							}
+						});
+					})
+					function checkExtension(name, size) {
+						if(size >= maxSize){
+							alert("파일 사이즈 초과");
+							return false;
+						}
+						
+						if(regex.test(name)) {
+							alert("해당 종류의 파일은 업로드 할 수 없습니다");
+							return false;
+						}
+						return true;
+					}
+					function showUploadedFile(uploadResultArr) {
+						var str = "";
+						for(var i in uploadResultArr) {
+							var obj = uploadResultArr[i];
+							console.log(obj);
+							str += "<li class='list-group-item' "
+							str += " data-filename='" + obj.fileName
+							str += "' data-image='" + obj.image
+							str += "' data-uuid='" + obj.uuid
+							str += "' data-uploadpath='" + obj.uploadPath
+							str += "' >"
+							if(!obj.image){
+								console.log("obj.downPath :: "+obj.downPath);
+								str += "<a href='${pageContext.request.contextPath}/download?fileName=" + obj.downPath + "'><i class='fas fa-paperclip text-muted'></i>" + obj.fileName + "</a>";
+							}
+							else {
+								console.log("obj.thumbPath :: "+obj.thumbPath);
+								str += "<a href='javascript:showImage(\"" + obj.downPath + "\")'>";
+								str += "<img src='${pageContext.request.contextPath}/display?fileName=" + obj.thumbPath + "'></a>";
+							}
+							str += "<i class='fas fa-times text-danger removeFileBtn'></i>"
+							str += "</li>";
+						}
+						uploadResult.append(str);
+					}
+					function showImage(path) {
+						$("#imageModal img").attr("src", "${pageContext.request.contextPath}/display?fileName=" + path)
+						$("#imageModal").modal("show");
+						$("#imageModal").attr("style", "margin-top:10%;");
+					}
+					$(".uploadResult").on("click", ".removeFileBtn", function() {
+						var $li = $(this).closest("li");
+						var data = {
+							fileName : $li.data("filename"), 
+							image: $li.data("image"),
+							uuid : $li.data("uuid"),
+							uploadPath : $li.data("uploadpath")
+						}
+						console.log(data);
+						console.log(JSON.stringify(data));
+						$.ajax({
+							url : "${pageContext.request.contextPath}/deleteFile",
+							type: "post",
+							data : JSON.stringify(data),
+							beforeSend : function(xhr) {
+								xhr.setRequestHeader(csrf, csrfToken)
+							},
+							contentType : "application/json; charset=utf-8",
+							success : function(result) {
+								alert(result);
+								$li.remove();
+							}
+						});
+					});
+					
+					$("button[type='submit']").click(function() {
+						
+						var forms = document.getElementsByClassName('needs-validation');
+						
+						/* console.log(forms)
+						console.log(forms.title.value) */ 
+						event.preventDefault();
+						var str = "";
+						var attrs = ["fileName", "uuid", "uploadPath", "image"];
+						$(".uploadResult li").each(function(i, it) {
+							for(var j in attrs) {
+								var tmp = '<input type="hidden" name="attachList[' + i + '].';
+								tmp += attrs[j]+ '" value="' + $(it).data(attrs[j].toLowerCase())+ '">';
+								console.log(tmp);
+								str += tmp;
+							}
+						});
+						//return false;
+						console.log(str);
+						//$(this).closest("form").append(str);
+						//console.log($(this).closest("form").serialize());
+						
+						$(this).closest("form").append(str).submit();
+						//return false
+					})
+				</script>
+				<script type="text/javascript"
+      src="https://maps.googleapis.com/maps/api/js?sensor=false">
+   	</script>
+	
+                </div>
+                <!-- /.container-fluid -->
+            </div>
+            <!-- End of Main Content -->
+<jsp:include page="../includes/footer.jsp"/>

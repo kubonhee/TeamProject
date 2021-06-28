@@ -1,0 +1,32 @@
+package net.yangchoo.mapper;
+
+import java.util.List;
+
+import org.apache.ibatis.annotations.Insert;
+import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.SelectKey;
+
+import net.yangchoo.domain.ChatMessage;
+import net.yangchoo.domain.ChatRoom;
+
+public interface ChatMapper {
+	
+	@SelectKey(statement="", keyProperty="", before=true, resultType=Integer.class)
+	@Insert("")
+	int createChat(ChatRoom room);
+	
+	@Select("")
+	ChatRoom selectChatRoom(Integer roomId);
+	
+	@Insert("")
+	Integer insertMessage(ChatMessage chatMessage);
+	
+	@Select("")
+	List<ChatMessage> messageList(Integer roomId);
+	
+	@Select("")
+	List<ChatRoom> chatRoomList(ChatRoom chatRoom);
+	
+	@Select("")
+	ChatRoom searchChatRoom(ChatRoom room);
+}

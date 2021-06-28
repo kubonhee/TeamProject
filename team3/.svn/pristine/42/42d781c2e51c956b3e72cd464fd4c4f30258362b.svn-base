@@ -1,0 +1,138 @@
+package net.yangchoo.controller;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AbstractAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.socket.CloseStatus;
+import org.springframework.web.socket.TextMessage;
+import org.springframework.web.socket.WebSocketSession;
+import org.springframework.web.socket.handler.TextWebSocketHandler;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import lombok.extern.slf4j.Slf4j;
+import net.yangchoo.domain.ChatContentsVO;
+import net.yangchoo.domain.ChatVO;
+import net.yangchoo.security.domain.CustomUser;
+import net.yangchoo.service.ChatService;
+
+@Slf4j
+@Controller
+public class WebSocketHandler extends TextWebSocketHandler {
+	
+	@Autowired
+	ChatService chatService;
+	
+	ObjectMapper objectMapper = new ObjectMapper();
+	private Map<String, ArrayList<WebSocketSession>> RoomList = new ConcurrentHashMap<String, ArrayList<WebSocketSession>>();
+	private Map<WebSocketSession, String> sessionList = new ConcurrentHashMap<WebSocketSession, String>();
+	private static int i;
+	
+	private List<WebSocketSession> sessions = new ArrayList<>();
+	
+	
+	// 웹소켓 세션 연결
+	@Override
+	public void afterConnectionEstablished(WebSocketSession session) throws Exception {
+		String userEmail = session.getPrincipal().getName();
+		sessions.add(session);
+		sessionList.put(session, userEmail);
+		
+		System.out.println(sessionList.size());
+		System.out.println("sessionList :: " + sessionList);
+		System.out.println("sessions :: " + session);
+		log.info(session.getId() + "님이 입장하셨습니다.");
+
+//		sessionList.put(session, userEmail);
+//		System.out.println(sessionList);
+		
+//		i++;
+//		log.info(session.getId() + "연결 성공 => 총 접속 인원 : " + i + "명");
+//		System.out.println(session.getPrincipal().getName());
+	}
+	
+	// 웹소켓 메세지 전송시
+	
+	@Override
+	protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
+		
+		// 이전 코드
+		String userEmail = session.getPrincipal().getName();
+		
+		log.info(session.getId() + " : " + message);
+		
+		for(WebSocketSession sess : sessions) {
+			sess.sendMessage(new TextMessage(message.getPayload()));
+			log.info(userEmail + " :: " + message.getPayload());
+		}
+//		AbstractAuthenticationToken principal = (AbstractAuthenticationToken) session.getPrincipal();
+//		Object userEmail = principal.getPrincipal();
+//		ChatContentsVO clientMessage = objectMapper.readValue(message.getPayload(), ChatContentsVO.class);
+//		
+//		
+//		ChatContentsVO chatContentsVO = new ChatContentsVO();
+//		chatContentsVO.setChatSenderId((String) userEmail);
+//		chatContentsVO.setChatContentsMessage(clientMessage.getChatContentsMessage());
+//		
+//		String json = objectMapper.writeValueAsString(chatContentsVO);
+//		for(WebSocketSession wss : sessions) {
+//			wss.sendMessage(new TextMessage(json));
+//		}
+		
+		// 새로운 코드
+		//String msg = message.getPayload();
+		
+		
+		
+		
+//		String msg = message.getPayload();
+//		
+//		ChatContentsVO chatContentsVO = objectMapper.readValue(msg, ChatContentsVO.class);
+//		
+//		ChatVO chatVO = (ChatVO) chatService.chatRoomSelectOne(chatContentsVO.getChatRoomNo());
+//		
+//		if(RoomList.get(chatVO.getChatRoomNo()) == null && chatContentsVO.getChatContentsMessage().equals("ENTER-CHAT") && chatVO != null) {
+//			ArrayList<WebSocketSession> sessionTwo = new ArrayList<>();
+//			
+//			sessionTwo.add(session);
+//			sessionList.put(session, chatVO.getChatRoomNo());
+//			RoomList.put(chatVO.getChatRoomNo(), sessionTwo);
+//			log.info("채팅방 생성");
+//		}
+	}
+	
+	// 세션 커넥터 종료
+	@Override
+	public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
+		String userEmail = session.getPrincipal().getName();
+		sessions.remove(session);
+		sessionList.remove(session);
+		log.info(userEmail + "이 퇴장");
+		System.out.println("sessionList :: " + sessionList);
+		System.out.println("sessions :: " + session);
+//		System.out.println(sessionList);
+		
+//		i--;
+//		log.info(session.getId() + "연결 종료 => 총 접속 인원 : " + i + "명");
+//		
+//		 if(sessionList.get(session) != null) {
+//			 RoomList.get(sessionList.get(session)).remove(session);
+//			 sessionList.remove(session);
+//		 }
+	}
+	
+//	private String getUserId(WebSocketSession session) {
+//		Map<String, Object> httpSession = session.getAttributes();
+//		String userId = (String) httpSession.get("userEmail");
+//		return userId == null ? null : userId;
+//	}
+}

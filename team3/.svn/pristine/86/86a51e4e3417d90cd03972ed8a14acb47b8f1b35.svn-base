@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="net.yangchoo.mapper.ChatMessageMapper">
+
+	<resultMap type="net.yangchoo.domain.ChatContentsVO" id="chatContentsMap">
+		<id property="chatRoomNo" column="CHAT_ROOM_NO"/>
+		<result property="chatContentsNo" column="CHAT_CONTENTS_NO"/>
+		<result property="chatContentsMessage" column="CHAT_CONTENTS_MESSAGE"/>
+		<result property="chatContentsDate" column="CHAT_CONTENTS_DATE"/>
+		<result property="chatSenderId" column="CHAT_SENDER_ID"/>
+	</resultMap>
+	
+	<!-- 채팅 입력 -->
+	<insert id="chatMessageInsert">
+		INSERT INTO CHAT_CONTENTS (CHAT_ROOM_NO, CHAT_CONTENTS_NO, CHAT_CONTENTS_MESSAGE, CHAT_SENDER_ID)
+		VALUES (
+		    (
+		    SELECT chat_room_no
+		    FROM CHAT
+		    WHERE CHAT_ROOM_NO = #{chatRoomNo}
+		    AND CHAT_ID = #{chatId}
+		    ) ,
+		    SEQ_CHAT_CONTENTS.NEXTVAL, #{chatContentsMessage}, #{chatId}
+		)
+	</insert>
+	
+	<!-- 특정 채팅방 채팅 조회 -->
+	<select id="chatRoomSelectOne" resultType="map">
+		SELECT DISTINCT C.CHAT_ROOM_NO, CC.CHAT_CONTENTS_NO , CC.CHAT_CONTENTS_MESSAGE, CHAT_SENDER_ID
+		FROM CHAT C
+		JOIN chat_contents CC
+		ON C.chat_room_no = CC.chat_room_no
+		WHERE CC.chat_room_no = #{chatRoomNo}
+	</select>
+	
+</mapper> 

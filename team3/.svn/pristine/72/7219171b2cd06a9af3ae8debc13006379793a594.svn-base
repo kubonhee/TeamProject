@@ -1,0 +1,98 @@
+package net.yangchoo.service;
+
+import java.util.List;
+
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import lombok.AllArgsConstructor;
+import lombok.extern.log4j.Log4j;
+import net.yangchoo.domain.BoardAttachVO;
+import net.yangchoo.domain.BoardVO;
+import net.yangchoo.domain.Criteria;
+import net.yangchoo.mapper.BoardAttachMapper;
+import net.yangchoo.mapper.BoardMapper;
+
+
+
+@Service
+@AllArgsConstructor
+@Log4j
+@Transactional
+public class BoardServiceImpl implements BoardService{
+	private BoardMapper boardMapper; 
+	private BoardAttachMapper boardAttachMapper;
+	
+	@Override
+	@Transactional
+	public void register(BoardVO boardVO) {
+		log.info("register..." + boardVO);
+		boardMapper.insertSelectKey(boardVO);
+		boardVO.getAttachList().forEach(a -> {
+			a.setBno(boardVO.getBno());
+			boardAttachMapper.insert(a);
+		});
+	}
+
+	@Override
+	public BoardVO get(Long bno) {
+		log.info("get :: " + bno);
+		return boardMapper.read(bno);
+	}
+
+	@Override
+	@Transactional
+	public int modify(BoardVO boardVO) {
+		log.info("modify....."+boardVO);
+		boardAttachMapper.deleteAll(boardVO.getBno());
+		boardVO.getAttachList().forEach(a -> {
+			a.setBno(boardVO.getBno());
+			boardAttachMapper.insert(a);
+		});
+		return boardMapper.update(boardVO);
+	}
+
+	@Override
+	@Transactional
+	public int remove(Long bno) {
+		log.info("remove....." + bno);
+		boardAttachMapper.deleteAll(bno);
+		return boardMapper.delete(bno);
+	}
+
+	
+
+	@Override
+	public List<BoardAttachVO> getAttachList(Long bno) {
+		log.info("getAttachList..." + bno);
+		return boardAttachMapper.findBy(bno);
+	}
+
+	@Override
+	public List<BoardVO> getList() {
+		log.info("getList...");
+		return boardMapper.getList();
+	}
+
+	@Override
+	public List<BoardVO> getListMore(Long bno) {
+		// TODO Auto-generated method stub
+		log.info("getListMore bno :: " + bno);
+		return boardMapper.getListMore(bno);
+	}
+
+	@Override
+	public List<BoardVO> getList(Criteria cri) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public int getTotal(Criteria cri) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+	
+	
+	
+}

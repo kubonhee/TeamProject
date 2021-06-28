@@ -1,0 +1,77 @@
+package net.yangchoo.repository;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
+
+import net.yangchoo.domain.ChatContentsVO;
+import net.yangchoo.mapper.ChatContentsMapper;
+
+@Repository
+public class ChatContentsDaoImpl implements ChatContentsDao{
+	
+//	@Autowired
+//	private ChatContentsMapper chatContentsMapper;
+//	
+//	// 메세지 전송
+//	@Override
+//	public int chatMessageInsert(ChatContentsVO chatContentsVO) {
+//		return chatContentsMapper.ChatContentsInsert(chatContentsVO);
+//	}
+//	
+//	// 메세지 전체 조회
+//	@Override
+//	public List<ChatContentsVO> chatContentsSelectAll() {
+//		return chatContentsMapper.chatContentsSelectAll();
+//	}
+//	
+//	// 특정 방번호 메세지 전체 조회
+//	@Override
+//	public List<ChatContentsVO> chatRoomNoSelectAll(Integer chatRoomNo) {
+//		return chatContentsMapper.chatRoomNoSelectAll(chatRoomNo);
+//	}
+//
+//	// 특정 메세지 조회
+//	@Override
+//	public ChatContentsVO chatMessageSelectOne(int chatContentsNo) {
+//		return chatContentsMapper.chatContentsSelectOne(chatContentsNo);
+//	}
+//	
+//	// 특정 메세지 업데이트
+//	@Override
+//	public int chatContentsUpdate(ChatContentsVO chatContentsVO) {
+//		return chatContentsMapper.chatUpdate(chatContentsVO);
+//	}
+//
+//	// 특정 메세지 삭제
+//	@Override
+//	public int chatContentsDelete(int chatContentsNo) {
+//		return chatContentsMapper.chatDelete(chatContentsNo);
+//	}
+//	
+////	// 메세지 수신 시 플래그 변경
+////	@Override
+////	public int chatContentsReadChat(ChatContentsVO chatContentsVO) {
+////		return chatContentsMapper.chatContentsReadChat(chatContentsVO);
+////	}
+////	
+////	// 메세지 읽지 않은 메세지 개수
+////	@Override
+////	public int chatNotReadCount(ChatContentsVO chatContentsVO) {
+////		return chatContentsMapper.chatNotReadCount(chatContentsVO);
+////	}
+////	
+////	// 메시지 전체 유저 읽지 않은 메세지 조회
+////	@Override
+////	public List<ChatContentsVO> chatAllNotReadMessage(ChatContentsVO chatContentsVO) {
+////		return chatContentsMapper.chatAllNotReadMessage(chatContentsVO);
+////	}
+////	
+////	// 메세지 읽지 않은 수 카운트
+////	@Override
+////	public List<ChatContentsCountVO> chatAllNotReadCount(String chatId) {
+////		return chatContentsMapper.chatAllNotReadCount(chatId);
+////	}
+	
+}

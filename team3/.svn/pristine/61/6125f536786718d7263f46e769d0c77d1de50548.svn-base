@@ -1,0 +1,12 @@
+package net.yangchoo.domain;
+
+import lombok.Data;
+
+@Data
+public class ChatContentsVO {
+	private Integer chatRoomNo;				// 채팅 방 번호
+	private String chatContentsNo;			// 채팅 내용 번호
+	private String chatContentsMessage;		// 채팅 내용
+	private String chatContentsDate;		// 채팅 송수신 시간
+	private String chatSenderId;			// 송수신 아이디(Sender)
+}

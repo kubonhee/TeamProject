@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="net.yangchoo.mapper.BoardAttachMapper">
+	<insert id="insert">
+		INSERT INTO ATTACH(UUID, UPLOADPATH, FILENAME, IMAGE, BNO)
+		VALUES (#{uuid}, #{uploadPath}, #{fileName}, #{image}, #{bno})
+	</insert>
+
+	<select id="findBy" resultType="net.yangchoo.domain.BoardAttachVO">
+		SELECT * FROM ATTACH WHERE BNO = #{bno}
+	</select>
+	  		
+	<delete id="delete" >
+		DELETE ATTACH WHERE UUID = #{uuid}
+	</delete>
+
+ </mapper> 

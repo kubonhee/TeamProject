@@ -1,0 +1,40 @@
+package net.yangchoo.mapper;
+
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+
+import lombok.extern.log4j.Log4j;
+import net.yangchoo.domain.MemberVO;
+
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration("file:src/main/webapp/WEB-INF/spring/root-context.xml")
+@Log4j
+public class MemberMapperTests {
+	
+	@Autowired
+	private MemberMapper mapper;
+	
+	@Test
+	public void test(){
+		log.info(mapper);
+	}
+	
+	@Test
+	public void testRegister() {
+		MemberVO memberVO = new MemberVO();
+		memberVO.setUserEmail("qhsgml@naver.com");
+		memberVO.setUserName("구본희");
+		memberVO.setUserPw("1234");
+		memberVO.setBirthDate("1993-09-19");
+		mapper.register(memberVO);
+	}
+	
+	@Test
+	public void testTime() {
+		log.info(mapper.testTime());
+	}
+
+}

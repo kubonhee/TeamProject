@@ -1,0 +1,287 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib uri="http://www.springframework.org/security/tags" prefix="sec"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+
+<html lang="en">
+
+
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="description" content="">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <!-- The above 4 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+
+    <!-- Title  -->
+    <title>Team-Project</title>
+	
+	
+    <!-- Favicon  -->
+    <link rel="icon" href="${pageContext.request.contextPath}/resources/img/core-img/favicon.ico">
+
+    <!-- Core Style CSS -->
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/core-style.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/style.css">
+    
+     <!-- ##### jQuery (Necessary for All JavaScript Plugins) ##### -->
+    <script src="${pageContext.request.contextPath}/resources/js/jquery/jquery-2.2.4.min.js"></script>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js" integrity="sha512-qTXRIMyZIFb8iQcfjXWCO8+M5Tbc38Qi5WzdPOYZHIlZpzBHG3L3by84BBBOiRGiEb7KKtAOAs5qYdUiZiQNNQ==" crossorigin="anonymous"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/locale/ko.min.js" integrity="sha512-3kMAxw/DoCOkS6yQGfQsRY1FWknTEzdiz8DOwWoqf+eGRN45AmjS2Lggql50nCe9Q6m5su5dDZylflBY2YjABQ==" crossorigin="anonymous"></script>
+      <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.8.2/css/all.min.css"/>
+     <script src="https://code.jquery.com/jquery-1.12.0.min.js"></script>
+    <script src="${pageContext.request.contextPath}/resources/js/jq_ext.js"></script>
+</head>
+
+<body>
+<nav class="navbar navbar-expand-lg topbar mb-4 static-top">
+	<!-- Sidebar Toggle (Topbar) -->
+	<form class="form-inline">
+		<button id="sidebarToggleTop"
+			class="btn btn-link d-md-none rounded-circle mr-3">
+			<i class="fa fa-bars"></i>
+		</button>
+	</form>
+	<!-- Topbar Navbar -->
+	<ul class="navbar-nav ml-auto">
+		<!-- Nav Item - Search Dropdown (Visible Only XS) -->
+		<li class="nav-item dropdown no-arrow d-sm-none">
+		<a class="nav-link dropdown-toggle" href="#" id="searchDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> 
+			<i class="fas fa-search fa-fw"></i>
+		</a> 
+		<!-- Dropdown - Messages -->
+			<div class="dropdown-menu dropdown-menu-right p-3 shadow animated--grow-in" aria-labelledby="searchDropdown">
+				<form class="form-inline mr-auto w-100 navbar-search">
+					<div class="input-group">
+						<input type="text"
+							class="form-control bg-light border-0 small"
+							placeholder="Search for..." aria-label="Search"
+							aria-describedby="basic-addon2">
+						<div class="input-group-append">
+							<button class="btn btn-primary" type="button">
+								<i class="fas fa-search fa-sm"></i>
+							</button>
+						</div>
+					</div>
+				</form>
+			</div>
+		</li>
+		<div class="topbar-divider d-none d-sm-block">
+		<!-- 키워드검색창 -->
+            <div class="col-sm-12 col-md-1 mb-2 p-0">
+  				<div id="dataTable_filter" class="dataTables_filter dataTables_length">
+  					<form id="searchForm" class="form-inline">
+  						<div class="search">
+  						<a class="search-nav">
+  						<img src="${pageContext.request.contextPath}/resources/img/core-img/search.png" alt=""> Search</a>
+    					<label>
+     					<select id="searchMenu" name="type" class="custom-select custom-select-sm" style="width:100px;">
+     							<option value="">--</option>
+     							<option value="T">제목</option>
+     							<option value="C">내용</option>
+     							<option value="W">작성자</option>
+     							<option value="TC">제목 or 내용</option>
+     							<option vaflue="TW">제목 or 작성자</option>
+     							<option value="CW">내용 or 작성자</option>
+     							<option value="TCW">제목 or 내용 or 작성자</option>
+    					</select>
+   						<input type="search" name="keyword" class="form-control form-control-sm" aria-controls="dataTable" placeholder="검색어를 입력하세요">
+   						<button class="btn btn-sm btn-warning ml-2">search</button>
+  						</label>
+   						</div> 
+  					<input type= "hidden" name="pageNum" value="${pageMaker.cri.pageNum}">
+					<input type= "hidden" name="amount" value="${pageMaker.cri.amount}">
+             		</form>
+             	</div>
+             </div>
+              <!-- 키워드검색창 끝 -->
+		</div>
+		   
+		<sec:authentication property="principal" var="member" />
+		<!-- Nav Item - User Information -->
+		<li class="nav-item dropdown no-arrow">
+			<a class="nav-link dropdown-toggle mt-3" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> 
+				<span
+					class="mr-2 d-none d-lg-inline" style="font-size: 15px;"> <%-- ${member} --%>
+						${member == 'anonymousUser' ? 'Not Login' : member.vo.userName}
+				</span> 
+			</a> 
+			<!-- Dropdown - User Information -->
+			<div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
+				<sec:authentication property="principal" var="member"/>
+	            <sec:authorize access="isAnonymous()">
+					<a class="dropdown-item" href="${pageContext.request.contextPath}/memberTerms">
+						회원가입
+					</a>
+					<a class="dropdown-item" href="${pageContext.request.contextPath}/memberLogin">
+						로그인
+					</a>
+				</sec:authorize>
+				<sec:authorize access="isAuthenticated()">
+					<a class="dropdown-item" href="#">
+						개인정보 수정
+					</a>
+					<div class="dropdown-divider"></div>
+					<form method="post" action="/memberLogout">
+						<button class="dropdown-item">
+							<i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
+							로그아웃
+						</button>
+						<input type="hidden" name="${_csrf.parameterName}"
+							value="${_csrf.token}">
+					</form>
+				</sec:authorize>
+			</div>
+		</li>
+	</ul>
+</nav>
+<!-- Logo -->
+<div class="container ml-5">
+    <a href="/"><img src="${pageContext.request.contextPath}/resources/img/core-img/logo.png" alt=""></a>
+</div>
+
+    <!-- Search Wrapper Area Start -->
+    <div class="search-wrapper section-padding-100">
+        <div class="search-close">
+            <i class="fa fa-close" aria-hidden="true"></i>
+        </div>
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    <div class="search-content">
+                        <form action="#" method="get">
+                            <input type="search" name="search" id="search" placeholder="Type your keyword...">
+                            <button type="submit"><img src="${pageContext.request.contextPath}/resources/img/core-img/search.png" alt=""></button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Search Wrapper Area End -->
+
+    <!-- ##### Main Content Wrapper Start ##### -->
+    <div class="main-content-wrapper d-flex clearfix">
+
+        <!-- Mobile Nav (max width 767px)-->
+        <div class="mobile-nav">
+            <!-- Navbar Brand -->
+            <div class="amado-navbar-brand">
+                <a href="${pageContext.request.contextPath}/"><img src="${pageContext.request.contextPath}/resources/img/core-img/logo.png" alt=""></a>
+            </div>
+            <!-- Navbar Toggler -->
+            <div class="amado-navbar-toggler">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+
+        <!-- Header Area Start -->
+        <header class="header-area clearfix">
+            <!-- Close Icon -->
+            <div class="nav-close">
+                <i class="fa fa-close" aria-hidden="true"></i>
+            </div>
+            
+            
+            <!-- 메인 화면 로그인 상태 창 -->
+            <div>
+            	<li class="main" style="list-style: none;">
+            
+	            <sec:authentication property="principal" var="member"/>
+	            <span class="mr-2 d-none d-lg-inline text-white-600 small"> 
+	            	${member == 'anonymousUser' ? 'anonymousUser' : member.vo.userName}
+				</span>
+				
+	            <ul class="sub" style="display:none" >
+		            <sec:authorize access="isAnonymous()">
+						<a class="dropdown-item" href="${pageContext.request.contextPath}/memberTerms">
+							회원가입
+						</a>
+						
+						<a class="dropdown-item" href="${pageContext.request.contextPath}/memberLogin">
+							로그인
+						</a>
+					</sec:authorize>
+					<sec:authorize access="isAuthenticated()">
+						<a class="dropdown-item" href="#">
+							개인정보 수정
+						</a>
+						<div class="dropdown-divider"></div>
+						<form method="post" action="/memberLogout">
+							<button class="dropdown-item">
+								<i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
+								로그아웃
+							</button>
+							<input type="hidden" name="${_csrf.parameterName}"
+								value="${_csrf.token}">
+						</form>
+					</sec:authorize>
+				</ul>
+				</li>
+			</div>
+			
+		<!-- <div id="box">
+            <li class="main">
+                test
+                <ul class="sub" style="display:none">
+                    <li>test1</li>
+                    <il>test2</il>
+                </ul>
+ 			</li>       
+        </div> -->
+		
+		<script>
+           $(".main").click(function(){
+               if($(".sub").is(":visible")){
+                   $(".sub").slideUp();
+               }
+               else{
+                   $(".sub").slideDown();
+               }
+           })
+        </script>
+            <!-- Amado Nav -->
+            <nav class="amado-nav">
+                <ul>
+                    <%-- <li >${member.vo.latitude}</li>
+                    <li >${member.vo.longitude}</li> --%>
+                    <li class="active"><a href="/">Home</a></li>
+                    <%-- <li class="active"><a href="/">${member.vo.latitude}</a></li>
+                    <li class="active"><a href="/">${member.vo.longitude}</a></li>  --%>
+                    
+                    <c:if test="${member != 'anonymousUser'}">
+                    	<%-- <li><a href="/near/nearList?latitude=${member.vo.latitude}&longitude=${member.vo.longitude}">nearList</a></li> --%> 
+                    	<li><a href="${pageContext.request.contextPath}/nearList">nearList</a></li> 
+                    </c:if>
+                    <li><a href="category${pageMaker.cri.listLink}&category=${board.category}">category/1</a></li>
+                    <li><a href="${pageContext.request.contextPath}/categories/2">category/2</a></li>
+                    <li><a href="${pageContext.request.contextPath}/categories/3">category/3</a></li>
+                    <li><a href="${pageContext.request.contextPath}/categories/4">category/4</a></li>
+                </ul>
+            </nav>
+            
+            <!-- Button Group -->
+            <div class="amado-btn-group mt-30 mb-30">
+                <a href="${pageContext.request.contextPath}/board/register" class="btn amado-btn mb-15">Write(상품등록)</a>
+                <a href="${pageContext.request.contextPath}/" class="btn amado-btn active">최신글 보기</a>
+            </div>
+           
+            <!-- Cart Menu -->
+            <div class="cart-fav-search mb-100">
+                <a href="cart.html" class="cart-nav"><img src="${pageContext.request.contextPath}/resources/img/core-img/cart.png" alt=""> Cart <span>(0)</span></a>
+                <a href="#" class="fav-nav"><img src="${pageContext.request.contextPath}/resources/img/core-img/favorites.png" alt=""> Favourite</a>
+                <a href="#" class="search-nav"><img src="${pageContext.request.contextPath}/resources/img/core-img/search.png" alt=""> Search</a>
+            </div>
+            <!-- Social Button -->
+            <div class="social-info d-flex justify-content-between">
+                <a href="#"><i class="fa fa-pinterest" aria-hidden="true"></i></a>
+                <a href="#"><i class="fa fa-instagram" aria-hidden="true"></i></a>
+                <a href="#"><i class="fa fa-facebook" aria-hidden="true"></i></a>
+                <a href="#"><i class="fa fa-twitter" aria-hidden="true"></i></a>
+            </div>
+        </header>
+        <!-- Header Area End -->

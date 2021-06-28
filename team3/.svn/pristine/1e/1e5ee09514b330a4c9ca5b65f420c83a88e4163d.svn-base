@@ -1,0 +1,4 @@
+@CHARSET "UTF-8";
+
+.joinwrapper {width: 600px; margin: 0 auto;}
+.joininput:hover {background-color: #f5f7fa;}

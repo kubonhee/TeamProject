@@ -1,0 +1,98 @@
+package net.yangchoo.controller;
+
+import java.text.DateFormat;
+import java.util.Date;
+import java.util.Locale;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+
+import lombok.Data;
+import lombok.extern.log4j.Log4j;
+import net.yangchoo.service.BoardService;
+
+/**
+ * Handles requests for the application home page.
+ */
+
+@Controller
+@Log4j
+@Data
+public class HomeController {
+	
+	private static final Logger logger = LoggerFactory.getLogger(HomeController.class);
+	@Autowired
+	private BoardService boardService;
+	
+	@RequestMapping(value = "/", method = RequestMethod.GET)
+	public String home(Locale locale, Model model) {
+		logger.info("Welcome home! The client locale is {}.", locale);
+		
+		Date date = new Date();
+		DateFormat dateFormat = DateFormat.getDateTimeInstance(DateFormat.LONG, DateFormat.LONG, locale);
+		
+		String formattedDate = dateFormat.format(date);
+		
+		model.addAttribute("serverTime", formattedDate );
+		
+		return "index";
+	}
+	
+	@RequestMapping(value = "/chatlogin", method = RequestMethod.GET)
+	public String websocket(Locale locale, Model model) {
+		return "chatlogin";
+	}
+	
+	@RequestMapping(value = "/sessionCheck", method = RequestMethod.GET)
+	public String chat(Locale locale, Model model) {
+		return "chat";
+	}
+	
+	
+	/**
+	 * 양수봉 2021/05/28
+	 */
+	
+	@RequestMapping(value = "/auth", method = RequestMethod.GET)
+	public String oauth(Model model) {
+		return "oauth";
+	}
+	//geolocation jsp로 이동
+	@RequestMapping(value = "/geolocation", method = RequestMethod.GET)
+	public String geolocation(Model model) {
+		return "geolocation";
+	}
+	
+	//카테고리 목록조회
+	@RequestMapping(value = "/categories/{cate}", method = RequestMethod.GET)
+	public String category(@PathVariable long cate, Model model) {
+		log.info("category :: " + cate);
+		model.addAttribute("cate", cate);
+		//model.addAttribute("list", boardService.categoryList(cate));
+		return "/categories/category";
+	}
+	
+	@RequestMapping(value = "/categories/board/details/{bno}", method = RequestMethod.GET)
+	public String categoryDetails(@PathVariable long bno, Model model) {
+		log.info("bno :: " + bno);
+		model.addAttribute("bno", bno);
+		//model.addAttribute("list", boardService.categoryList(cate));
+		return "/board/details";
+	}
+	
+	/*//범위 목록조회
+	@RequestMapping(value = "/board/nearList/{latitude}/{longitude}", method = RequestMethod.GET)
+	public String nearList(@PathVariable Long latitude, @PathVariable Long longitude, Model model) {
+		log.info("km :: " + latitude+"::" +longitude);
+		model.addAttribute("latitude", latitude);
+		model.addAttribute("longitude", longitude);
+		//model.addAttribute("list", boardService.categoryList(cate));
+		return "/board/nearList";
+	}*/
+}

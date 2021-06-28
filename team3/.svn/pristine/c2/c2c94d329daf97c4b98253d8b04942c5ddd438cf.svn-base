@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- <mapper namespace="net.yangchoo.mapper.MemberMapper">
+ <resultMap type="xyz.younis.domain.MemberVO" id="memberMap">
+		<id property="userEmail" column="userEmail"/>
+		<result property="userPw" column="userPw"/>
+		<result property="userLOC" column="userLOC"/>
+		<result property="userName" column="userName"/>
+		<result property="regDate" column="regDate"/>
+		<result property="updateDate" column="updateDate"/>
+		<collection property="authList" resultMap="authMap" />
+	</resultMap> -->
+	
+<mapper namespace="net.yangchoo.mapper.MemberMapper">
+	<resultMap type="net.yangchoo.domain.MemberVO" id="memberMap">
+		<id property="userEmail" column="useremail"/>
+		<result property="userPw" column="userpw"/>
+		<result property="userName" column="username"/>
+		<result property="postCode" column="postcode"/>
+		<result property="roadAddress" column="roadaddress"/>
+		<result property="jibunAddress" column="jibunaddress"/>
+		<result property="extraAddress" column="extraaddress"/>
+		<result property="latitude" column="latitude"/>
+		<result property="longitude" column="longitude"/>
+		<result property="birthDate" column="birthdate"/>
+		<result property="regDate" column="regdate"/>
+		<result property="updateDate" column="updatedate"/>
+		<result property="detailaddr" column="detailaddr"/>
+		
+		<collection property="authList" resultMap="authMap" />
+	</resultMap>
+		
+	<resultMap type="net.yangchoo.domain.AuthVO" id="authMap">
+		<result property="userEmail" column="useremail"/>
+		<result property="userAuth" column="userauth"/>
+	</resultMap>
+	
+	<select id="read" resultMap="memberMap">
+	SELECT * 
+	FROM MEMBER
+	JOIN MEMBER_AUTH
+	USING (USEREMAIL)
+	WHERE USEREMAIL = #{userEmail}
+	</select>
+	
+	<!-- 회원가입 -->
+	<insert id="register">
+		INSERT INTO MEMBER( USEREMAIL,
+							USERPW,
+							USERNAME,
+							BIRTHDATE,
+							POSTCODE,
+							ROADADDRESS,
+							JIBUNADDRESS,
+							EXTRAADDRESS,
+							LATITUDE,
+							LONGITUDE,
+							DETAILADDR
+							)
+					VALUES( #{userEmail},
+							#{userPw},
+							#{userName},
+							#{birthDate},
+							#{postCode},
+							#{roadAddress},
+							#{jibunAddress},
+							#{extraAddress},
+							#{latitude},
+							#{longitude},
+							#{detailaddr}
+							)
+	</insert>
+	<!--  권한 부여 -->
+	<insert id="insertAuth">
+		INSERT INTO MEMBER_AUTH(USEREMAIL,
+								USERAUTH)
+						VALUES( #{userEmail},
+								#{userAuth}
+								)
+	</insert>
+	<!-- 회원 수정 -->
+	<update id="memberModify">
+		UPDATE MEMBER SET
+		USERPW = #{userPw},
+		USERNAME = #{userName},
+		BIRTHDATE = #{birthDate},
+		POSTCODE = #{postCode},
+		ROADADDRESS = #{roadAddress},
+		JIBUNADDRESS = #{jibunAddress},
+		EXTRAADDRESS = #{extraAddress}
+		WHERE USEREMAIL = #{userEmail}
+		
+	</update>
+</mapper>

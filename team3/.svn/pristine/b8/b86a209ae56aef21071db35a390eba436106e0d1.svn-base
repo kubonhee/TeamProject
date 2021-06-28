@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="net.yangchoo.mapper.BoardMapper">
+
+<resultMap type="net.yangchoo.domain.BoardVO" id="boardMap">
+		<id property="bno" column="bno"/>
+		<result property="bno" column="bno"/>
+		<result property="title" column="title"/>
+		<result property="content" column="content"/>
+		<result property="writer" column="writer"/>
+		<result property="price" column="price"/> 
+		<result property="category" column="category"/>
+		<result property="regdate" column="regdate"/>
+		<result property="updateDate" column="updatedate"/>
+		<result property="replyCnt" column="replycnt"/>
+		<result property="latitude" column="latitude"/>
+		<result property="longitude" column="longitude"/>
+		<result property="distance" column="distance"/>
+		<collection property="attachList" resultMap="attachMap"/>
+	</resultMap>
+	
+	<resultMap type="net.yangchoo.domain.BoardAttachVO" id="attachMap">
+		<result property="bno" column="bno"/>
+		<result property="uuid" column="uuid"/>
+		<result property="fileName" column="filename"/>
+		<result property="uploadPath" column="uploadpath"/>
+	</resultMap>
+	
+
+	<sql id="cri"> <!-- cri를 안쓰는데 어디로 해줘야할까? -->
+		<trim prefix="(" suffix=") AND" prefixOverrides="OR">
+          	<foreach item="type" collection="typeArr">
+				<trim prefix="OR">
+					<choose>
+						<when test="type == 'T'.toString()">
+							TITLE LIKE '%'||#{keyword}||'%'
+						</when>
+						<when test="type == 'C'.toString()">
+							CONTENT LIKE '%'||#{keyword}||'%'
+						</when>
+						<when test="type == 'W'.toString()">
+							WRITER LIKE '%'||#{keyword}||'%'
+						</when>
+					</choose>
+				</trim>	          	
+          	</foreach>
+          </trim>
+	</sql>
+	
+	<select id="getTotalCount" resultType="int">
+		CDATA 사용이유 BNO > 0 에서 > 를 부등호로 인식해서 닫혀버림;;
+		<![CDATA[
+			SELECT count(*) FROM BOARD WHERE 
+		]]>
+		
+			<include refid="cri"></include>
+		
+		<![CDATA[
+			BNO > 0
+		]]>
+	</select>
+	<select id="getList" resultType="net.yangchoo.domain.BoardVO">
+		<!--CDATA 사용이유 BNO > 0 에서 > 를 부등호로 인식해서 닫혀버림;; -->
+		<![CDATA[
+			SELECT
+			    /*+ INDEX_DESC(BOARD PK_BOARD) */
+			    *
+			FROM BOARD
+			WHERE BNO > 0
+		]]>
+	</select>
+	
+	<select id="getListMore" resultType="net.yangchoo.domain.BoardVO" >
+		SELECT
+		    /*+ INDEX_DESC(BOARD PK_BOARD) */
+		    *
+		FROM BOARD
+		WHERE BNO > 0
+		<trim prefix="AND (" suffix=")" prefixOverrides="OR">
+          	<foreach item="cri.type" collection="cri.typeArr">
+				<trim prefix="OR">
+					<choose>
+						<when test="cri.type == 'T'.toString()">
+							TITLE LIKE '%'||#{cri.keyword}||'%'
+						</when>
+						<when test="cri.type == 'C'.toString()">
+							CONTENT LIKE '%'||#{cri.keyword}||'%'
+						</when>
+						<when test="cri.type == 'W'.toString()">
+							WRITER LIKE '%'||#{cri.keyword}||'%'
+						</when>
+					</choose>
+				</trim>	          	
+          	</foreach>
+          </trim>
+		AND ROWNUM &lt;= 12
+		<if test="bno != null">
+		AND BNO &lt; #{bno}
+		</if>
+	</select>
+	
+	<!-- <select id="getListWithPaging" resultType="net.yangchoo.domain.BoardVO">
+		CDATA 사용이유 BNO > 0 에서 > 를 부등호로 인식해서 닫혀버림;;
+		<![CDATA[
+		WITH TMP AS (
+	          SELECT 
+	          /*+ INDEX_DESC(BOARD PK_BOARD) */
+	          ROWNUM RN, BOARD.*
+	          FROM BOARD
+	          WHERE 
+          ]]>
+          	<include refid="cri"></include>
+	           
+         <![CDATA[ 
+	          BNO > 0
+	          AND ROWNUM <= #{pageNum} * #{amount}
+	         )
+         SELECT BNO, TITLE, CONTENT, WRITER, REGDATE, UPDATEDATE,REPLYCNT FROM TMP
+         WHERE RN > (#{pageNum} - 1) * #{amount}
+		]]>
+		
+	</select> -->
+	
+	<select id="getAttachList" resultMap="boardMap">
+		SELECT B.BNO,TITLE,CONTENT,WRITER,,PRICE,CATEGORY,REGDATE,UPDATEDATE,REPLYCNT,UUID,FILENAME,UPLOADPATH FROM
+		BOARD B
+		LEFT OUTER JOIN
+		ATTACH A
+		ON B.BNO = A.BNO
+		WHERE B.BNO = A.BNO
+	</select>
+	
+	<select id="categoryList" resultMap="boardMap">
+		SELECT * 
+		FROM BOARD
+		WHERE CATEGORY = #{category}
+		ORDER BY BNO DESC
+	</select>
+	
+ 	<select id="nearList" resultMap="boardMap">
+		SELECT * FROM (
+	    SELECT BOARD.*, DISTANCEFROMLATLNGINKM(
+	    	 #{latitude}
+	         ,LATITUDE
+	         ,#{longitude}
+	         ,LONGITUDE
+	    ) AS DISTANCE  FROM BOARD WHERE LATITUDE IS NOT NULL
+	<![CDATA[
+	) WHERE DISTANCE <= 20
+	]]>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO BOARD(BNO,TITLE,CONTENT,WRITER,PRICE,CATEGORY,LATITUDE,LONGITUDE)
+		VALUES (SEQ_BOARD.NEXTVAL, #{title}, #{content}, #{writer}, #{price}, #{category},#{latitude},#{longitude})
+	</insert>
+	
+	<insert id="insertSelectKey">
+		<selectKey keyProperty="bno" order="BEFORE" resultType="long">
+			SELECT SEQ_BOARD.NEXTVAL FROM DUAL
+		</selectKey>
+		INSERT INTO BOARD(BNO,TITLE,CONTENT,WRITER,PRICE,CATEGORY,LATITUDE,LONGITUDE)
+		VALUES (#{bno},#{title}, #{content}, #{writer}, #{price}, #{category},#{latitude},#{longitude})
+	</insert>
+
+	<select id="read" resultType="net.yangchoo.domain.BoardVO">
+		SELECT * FROM BOARD WHERE BNO = #{bno}
+	</select>
+
+	<delete id="delete">
+		DELETE BOARD WHERE BNO = #{bno}
+	</delete>
+
+	<update id="update">
+		UPDATE BOARD SET
+		TITLE = #{title}
+		,CONTENT = #{content}
+		,PRICE = #{price}
+		,CATEGORY = #{category}
+		,UPDATEDATE = SYSDATE
+		WHERE BNO = #{bno}
+	</update>
+</mapper> 

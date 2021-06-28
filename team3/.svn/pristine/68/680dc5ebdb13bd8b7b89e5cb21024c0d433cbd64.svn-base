@@ -1,0 +1,89 @@
+]<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+ <jsp:include page="../includes/header.jsp"/>
+        <!-- Header Area End -->
+		
+        <!-- Product Catagories Area Start -->
+        <div class="products-catagories-area clearfix">
+        	<%-- <h1>${member }</h1> --%>
+        	<h1>${list}</h1>
+        	<%-- <h1>${member}</h1> --%>
+            <div class="amado-pro-catagory clearfix" id="boardSection">
+                <div class="row container-lg p-2 m-0">
+		<%-- 	<div class="boardDiv col-sm-6 col-md-4 p-2" data-bno ='${list.bno}'>
+				<a href="../board/details/${list.bno}">
+				<div style="height:363px; background:url(' + imgSrc + ') no-repeat center; background-size:cover">
+				<img src="' + imgSrc + '" alt="">
+				</div>
+				<div class="hover-content">
+				<h3>${list.title}</h3>
+				<hr>
+				<ul class="list-style:none;">
+				<li>위치 보여줄곳</li>
+				<li>${list.regdate}</li>
+				<li class="product-price" style="bold; color:#fbb710; font-size:20px;">${list.price} 원</li>
+				</ul>
+				</div>
+				</a>
+				</div> 
+			
+			</div><div class="row">
+			</div>--%>
+            </div>
+            <button id="btnShowMore" class="btn btn-warning btn-block">View More</button>
+        </div>
+        <!-- Product Catagories Area End -->
+    </div>
+    <!-- ##### Main Content Wrapper End ##### -->
+
+    <!-- ##### Newsletter Area End ##### -->
+    <script src="${pageContext.request.contextPath}/resources/js/board.js"></script>
+    <!-- <script>
+    var cp = '${pageContext.request.contextPath}';
+   	console.log(cp);
+   	
+   	var latitude = '${member.latitude}';
+   	var longitude = '${member.longitude}';
+   	console.log("latitude"+latitude);
+   	console.log("longitude"+longitude);
+   	
+   	showList(latitude, longitude);
+	
+	function showList(latitude,longitude){
+		boardService.nearList({latitude:latitude,longitude:longitude, cp:cp}, function(list) {
+			//글 목록 출력
+			console.log(list);
+			
+			//if(page == -1) showList(result.realEnd);
+			if(!list.length) {
+				$("#btnShowMore").prop("disabled", true).text("추가 글이 없습니다");
+			}
+			
+			var	str = boardService.getBoardDom(list);
+			$("#boardSection").html($("#boardSection").html() + str);
+		})
+	}
+	
+	//btnShowMore 이벤트
+	$("#btnShowMore").click(function() {
+		var bno = $("#boardSection .boardDiv:last").data("bno");
+		showList(bno);
+	});
+	
+	/* 	window.onscroll = function(e) {
+		    //추가되는 임시 콘텐츠
+		    //window height + window scrollY 값이 document height보다 클 경우,
+		    if((window.innerHeight + window.scrollY) >= document.body.offsetHeight) {
+		    	// 마지막 bno를 가져오기
+				var bno = $("#boardSection .boardDiv:last").data("bno");
+				// 그 bno를 기반으로 showList호출하기
+				showList(bno);
+		    }
+		}; */
+	
+    $(function() {
+    });
+		
+    </script> -->
+<jsp:include page="../includes/footer.jsp"/>

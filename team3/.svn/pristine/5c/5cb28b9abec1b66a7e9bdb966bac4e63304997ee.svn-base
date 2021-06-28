@@ -1,0 +1,12 @@
+package net.yangchoo.mapper;
+
+import org.apache.ibatis.annotations.Select;
+
+import net.yangchoo.domain.MemberVO;
+
+public interface MemberMapper {
+	@Select("SELECT SYSDATE FROM DUAL")
+	String testTime();
+	
+	void register(MemberVO memberVO);
+}

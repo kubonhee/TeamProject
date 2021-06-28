@@ -1,0 +1,55 @@
+package net.yangchoo.service;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import net.yangchoo.domain.AuthVO;
+import net.yangchoo.domain.MemberVO;
+import net.yangchoo.mapper.AuthMapper;
+import net.yangchoo.mapper.MemberMapper;
+
+@Service
+public class MemberServiceImpl implements MemberService{
+	@Autowired
+	MemberMapper memberMapper;
+	@Autowired @Qualifier("BCryptPasswordEncoder")
+	private PasswordEncoder encoder;
+	@Autowired
+	AuthMapper authMapper;
+	
+	
+
+	@Transactional
+	public int register(MemberVO memberVO) {
+		try {
+			AuthVO authVO = new AuthVO();
+			authVO.setUserEmail(memberVO.getUserEmail());
+			authVO.setUserAuth("ROLE_ADMIN");
+			
+			memberVO.setUserPw(encoder.encode(memberVO.getUserPw()));
+			System.out.println(memberVO);
+			memberMapper.register(memberVO);
+			authMapper.authorization(authVO);
+			return 1;
+		}catch(Exception e) {
+			e.printStackTrace();
+			System.out.println("MemberService : 회원가입()"+e.getMessage());
+		}
+		return -1;
+	}
+
+	@Override
+	public MemberVO read(String userEmail) {
+		return memberMapper.read(userEmail);
+	}
+	
+	public void memberModify(MemberVO memberVO) throws Exception{
+		memberMapper.memberModify(memberVO);
+	}
+	
+	
+
+}

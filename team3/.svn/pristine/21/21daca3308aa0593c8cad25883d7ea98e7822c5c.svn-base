@@ -1,0 +1,29 @@
+package net.yangchoo.repository;
+
+import java.util.List;
+
+import net.yangchoo.domain.ChatVO;
+
+public interface ChatDao {
+	
+//	// 첫 채팅방 생성
+//	public int ChatFirstInsert(String chatId);
+//	
+//	// 상대 채팅방 생성
+//	public int ChatTargetInsert(Integer chatRoomNo, String chatId);
+//	
+//	// 채팅방 전체 리스트 조회
+//	public List<ChatVO> chatRoomSelectAll(String chatId);
+//	
+//	// 현재 생성된 마지막 방번호 조회
+//	public String ChatGetCurrentRoomNo();
+//	
+//	// 채팅방 선택 조회
+//	public ChatVO chatSelectOne(int chatRoomNo);
+//	
+//	// 채팅방 업데이트
+//	public int chatUpdate(ChatVO chatVO);
+//	
+//	// 채팅방 삭제
+//	public int chatDelete(int chatRoomNo);
+}

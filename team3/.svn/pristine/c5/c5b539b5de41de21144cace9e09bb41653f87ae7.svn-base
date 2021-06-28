@@ -1,0 +1,23 @@
+package net.yangchoo.mapper;
+
+import java.util.List;
+
+import net.yangchoo.domain.ChatContentsVO;
+
+public interface ChatMessageMapper {
+	/*
+	 * 채팅 내용 
+	 */
+	
+	// 메세지 전송
+	int chatMessageInsert(ChatContentsVO chatContentsVO);
+		
+	// 특정 채팅방 채팅 조회
+	public List<ChatContentsVO> chatRoomSelectOne(int chatRoomNo);
+	
+	// 특정 방번호에 대한 메세지 전체 조회
+	// List<ChatContentsVO> chatRoomNoMessageSelectAll(@Param("chatRoomNo") Integer chatRoomNo);
+	
+	// 특정 메세지 조회
+	// ChatContentsVO chatMessageSelectAll(@Param("chatContentsNo") int chatContentsNo);
+}

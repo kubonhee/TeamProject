@@ -1,0 +1,28 @@
+package net.yangchoo.service;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import net.yangchoo.domain.MemberVO;
+import net.yangchoo.mapper.MemberMapper;
+
+@Service
+public class MemberServiceImpl implements MemberService{
+	@Autowired
+	MemberMapper memberMapper;
+	
+
+	@Transactional
+	public int register(MemberVO memberVO) {
+		try {
+			memberMapper.register(memberVO);
+			return 1;
+		}catch(Exception e) {
+			e.printStackTrace();
+			System.out.println("MemberService : 회원가입()"+e.getMessage());
+		}
+		return -1;
+	}
+
+}

@@ -1,0 +1,146 @@
+package net.yangchoo.service;
+
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import net.yangchoo.domain.ChatContentsVO;
+import net.yangchoo.domain.ChatVO;
+import net.yangchoo.domain.MemberVO;
+import net.yangchoo.repository.ChatContentsDao;
+import net.yangchoo.repository.ChatDao;
+
+@Service
+public class ChatServiceImpl implements ChatService {
+	
+//	@Autowired
+//	private ChatDao chatDao;
+//	
+//	@Autowired
+//	private ChatContentsDao chatContentsDao;
+//	
+////	@Override
+////	public Map<String, MemberVO> getMemberInfo(String chatId) {
+////		// TODO Auto-generated method stub
+////		return null;
+////	}
+//	
+//	// 첫 채팅방 생성
+//	@Override
+//	public int chatFirstInsert(String chatId) {
+//		return chatDao.ChatFirstInsert(chatId);
+//	}
+//
+//	// 상대 채팅방 생성
+//	@Override
+//	public int chatTargetInsert(Integer chatRoomNo, String chatId) {
+//		return chatDao.ChatTargetInsert(chatRoomNo, chatId);
+//	}
+//	
+//	// 채팅방 전체 조회
+//	@Override
+//	public List<ChatVO> chatRoomSelectAll(String chatId) {
+//		return chatDao.chatRoomSelectAll(chatId);
+//	}
+//
+//	// 채팅방 마지막 번호
+//	@Override
+//	public String chatGetCurrentChatRoomNo() {
+//		return chatDao.ChatGetCurrentRoomNo();
+//	}
+//	
+//	// 채팅방 중복 체크
+//	@Override
+//	public boolean duplicateCheck(String chatId, String chatTargetId) {
+//		boolean isDuplicated = false;
+//		List<ChatVO> chatList = chatDao.chatRoomSelectAll(chatId);
+//		for(ChatVO chatVO : chatList) {
+//			if(chatVO.getChatId().equalsIgnoreCase(chatTargetId)) {
+//				isDuplicated = true;
+//			}
+//		}
+//		return isDuplicated;
+//	}
+//	
+//	// 특정 채팅방 조회
+//	@Override
+//	public ChatVO chatSelectOne(int chatRoomNo) {
+//		return chatDao.chatSelectOne(chatRoomNo);
+//	}
+//	
+//	// 채팅방 업데이트
+//	@Override
+//	public int chatUpdate(ChatVO chatVO) {
+//		return chatDao.chatUpdate(chatVO);
+//	}
+//	
+//	// 채팅방 삭제
+//	@Override
+//	public int chatDelete(int chatRoomNo) {
+//		return chatDao.chatDelete(chatRoomNo);
+//	}
+//
+//	// 채팅 입력
+//	@Override
+//	public int chatMessageInsert(ChatContentsVO chatContentsVO) {
+//		return chatContentsDao.chatMessageInsert(chatContentsVO);
+//	}
+//
+//	// 채팅 전체 조회
+//	@Override
+//	public List<ChatContentsVO> chatMessageSelectAll() {
+//		return chatContentsDao.chatContentsSelectAll();
+//	}
+//	
+//	// 채팅방 전체 조회
+//	@Override
+//	public List<ChatContentsVO> chatRoomNoSelectAll(Integer chatRoomNo) {
+//		return chatContentsDao.chatRoomNoSelectAll(chatRoomNo);
+//	}
+//
+//	// 특정 채팅 메세지 조회
+//	@Override
+//	public ChatContentsVO chatMessageSelectOne(int chatContentsNo) {
+//		return chatContentsDao.chatMessageSelectOne(chatContentsNo);
+//	}
+//
+//	// 채팅 메세지 업데이트
+//	@Override
+//	public int chatMessageUpdate(ChatContentsVO chatContentsVO) {
+//		return chatContentsDao.chatContentsUpdate(chatContentsVO);
+//	}
+//	
+//	// 채팅 메세지 삭제
+//	@Override
+//	public int chatMessageDelete(int chatContentsNo) {
+//		return chatContentsDao.chatContentsDelete(chatContentsNo);
+//	}
+//
+////	@Override
+////	public int chatMessageReadChat(ChatContentsVO chatContentsVO) {
+////		// TODO Auto-generated method stub
+////		return 0;
+////	}
+////
+////	@Override
+////	public int chatRoomNoReadCount(ChatContentsVO chatContentsVO) {
+////		// TODO Auto-generated method stub
+////		return 0;
+////	}
+////
+////	@Override
+////	public List<ChatContentsVO> chatAllNotReadMessage(ChatContentsVO chatContentsVO) {
+////		// TODO Auto-generated method stub
+////		return null;
+////	}
+////
+////	@Override
+////	public List<ChatContentsCountVO> chatAllNotReadCount(String userId) {
+////		// TODO Auto-generated method stub
+////		return null;
+////	}
+	
+	
+}

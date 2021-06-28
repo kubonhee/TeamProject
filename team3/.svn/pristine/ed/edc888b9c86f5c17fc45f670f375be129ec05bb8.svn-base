@@ -1,0 +1,138 @@
+ <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+ <jsp:include page="../includes/header.jsp"/>
+     <!-- Product Details Area Start -->
+        <div class="single-product-area section-padding-100 clearfix">
+            <div class="container">
+                <div class="row">
+                    <div class="col-12">
+                        <nav aria-label="breadcrumb">
+                            <ol class="breadcrumb mt-50">
+                                <li class="breadcrumb-item"><a href="#">상위카테고리</a></li>
+                                <li class="breadcrumb-item"><a href="#">중위카테고리</a></li>
+                                <li class="breadcrumb-item"><a href="#">하위카테고리</a></li>
+                                <li class="breadcrumb-item active" aria-current="page">여기에 카테고리 나오게끔</li>
+                            </ol>
+                        </nav>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-12 col-lg-7">
+                        <div class="single_product_thumb">
+                            <div id="product_details_slider" class="carousel slide" data-ride="carousel">
+                                <ol class="carousel-indicators">
+                                    <li class="active" data-target="#product_details_slider" data-slide-to="0" style="background-image: url(${pageContext.request.contextPath}/resources/img/product-img/pro-big-1.jpg);">
+                                    </li>
+                                    <!-- <li data-target="#product_details_slider" data-slide-to="1" style="background-image: url(img/product-img/pro-big-2.jpg);">
+                                    </li>
+                                    <li data-target="#product_details_slider" data-slide-to="2" style="background-image: url(img/product-img/pro-big-3.jpg);">
+                                    </li>
+                                    <li data-target="#product_details_slider" data-slide-to="3" style="background-image: url(img/product-img/pro-big-4.jpg);">
+                                    </li> -->
+                                </ol>
+                                <div class="carousel-inner">
+                                    <div class="carousel-item active">
+                                        <a class="gallery_img" href="${pageContext.request.contextPath}/resources/img/product-img/pro-big-1.jpg">
+                                            <img class="d-block w-100" src="${pageContext.request.contextPath}/resources/img/product-img/pro-big-1.jpg" alt="First slide">
+                                        </a>
+                                    </div>
+                                    <%-- <div class="carousel-item">
+                                        <a class="gallery_img" href="img/product-img/pro-big-2.jpg">
+                                            <img class="d-block w-100" src="${pageContext.request.contextPath}/resources/img/product-img/pro-big-2.jpg" alt="Second slide">
+                                        </a>
+                                    </div>
+                                    <div class="carousel-item">
+                                        <a class="gallery_img" href="img/product-img/pro-big-3.jpg">
+                                            <img class="d-block w-100" src="img/product-img/pro-big-3.jpg" alt="Third slide">
+                                        </a>
+                                    </div>
+                                    <div class="carousel-item">
+                                        <a class="gallery_img" href="img/product-img/pro-big-4.jpg">
+                                            <img class="d-block w-100" src="img/product-img/pro-big-4.jpg" alt="Fourth slide">
+                                        </a>
+                                    </div> --%>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-lg-5">
+                        <div class="single_product_desc">
+                            <!-- Product Meta Data -->
+                            <div class="product-meta-data">
+                                <div class="line"></div>
+                                <a href="product-details.html">
+                                    <h6>글 제목 입력 부분</h6>
+	                                <p class="product-price">$가격 입력부분</p>
+                                </a>
+                               
+                            </div>
+                            <div class="form-group">
+						      <label for="title" class="font-weight-bold text-warning">content</label>
+						      <textarea class="form-control" rows="10" id="content" placeholder="게시글 내용을 입력하세요" name="content" required readonly style="height: 420px">글 내용 입력 부분</textarea>
+						      <div class="valid-feedback">Valid.</div>
+							  <div class="invalid-feedback">Please fill out this field.</div>
+						   </div>
+                            <!-- Add to Cart Form -->
+                           <form class="cart clearfix" method="post">
+                           		<button type="submit" name="addtocart" value="5" class="btn amado-btn mb-3" style="width: 440px;">Chat</button>
+								<a href="list${cri.listLink}" data-oper="list" class="btn btn-outline-info float-right">List</a>
+								<sec:authorize access="isAuthenticated()">
+								<sec:authentication property="principal" var="pinfo"/>
+								<c:if test="${pinfo.username == board.writer}">
+								<a href="modify${cri.listLink}&bno=${board.bno}"data-oper="modify" class="btn btn-outline-warning float-right mr-1">Modify</a>
+								</c:if>
+								</sec:authorize>
+                           </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+			<div class="replySection">
+				<ul class="list-group chat">
+					<!-- <li class="list-group-item">
+						<div class="header">
+							<strong>user00</strong>
+							<small class="float-right">2021-05-26 16:37</small>
+						</div>
+						<p class="mt-2">댓글 비동기로 <br>붙일예정<br>입니다.</p>
+					</li> -->
+				</ul> 
+			<button id="btnShowMore" class="btn btn-warning btn-block">View More</button>
+			<div class="board-footer"></div>
+			</div>
+        </div>
+        <!-- Product Details Area End -->
+    </div>
+    <!-- ##### Main Content Wrapper End ##### -->
+
+   
+    <script src="${pageContext.request.contextPath}/resources/js/board.js"></script>
+    <script src="${pageContext.request.contextPath}/resources/js/reply.js"></script>
+    <script>
+    // 댓글 부분 가져오기 채팅 연결 부분 넣기
+	    var cp = '${pageContext.request.contextPath}';
+		var replyUL = $(".chat");
+		//var pageNum = 1;
+					
+		showList();
+					
+		function showList(rno){
+			replyService.getList({bno:bno, rno:rno, cp:cp}, function(list) {
+				//댓글 목록 출력
+				console.log(list);
+				
+				//if(page == -1) showList(result.realEnd);
+				if(!list.length) {
+					$("#btnShowMore").prop("disabled", true).text("추가 댓글이 없습니다");
+				}
+				
+				var str = "";
+				for(var i in list) {
+					str += replyService.getReplyDom(list[i]);
+				}
+				replyUL.html(replyUL.html() + str);
+			})
+		}
+    </script>
+    <!-- ##### Newsletter Area End ##### -->
+    <jsp:include page="../includes/footer.jsp"/>

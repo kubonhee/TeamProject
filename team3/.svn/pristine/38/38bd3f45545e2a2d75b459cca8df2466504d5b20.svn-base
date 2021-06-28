@@ -1,0 +1,68 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset=UTF-8">
+<title>2021. 5. 26.오후 5:29:04</title>
+<title>회원가입 창</title>
+</head>
+<body>
+	<form name="form">
+	<div>
+		<table>
+			<tr>
+				<td width="50%" height="50%" align="center"><br> 
+					<textarea readonly="readonly" rows="15" cols="75"> 여러분을 환영합니다.
+- 환영 환영~
+					</textarea><br> 
+					<input type="checkbox" name="req"> 사이트 이용약관 동의
+				</td>
+			</tr>
+		</table>
+		
+		<table>
+			<tr>
+				<td width="50%" height="50%" align="center"><br> 
+					<textarea readonly="readonly" rows="15" cols="75">개인정보 수집 및 이용 동의
+- 회원 가입을 위한 내용 등등등
+					</textarea><br> 
+					<input type="checkbox" name="req2"> 개인정보 수집 및 이용 동의
+				</td>
+			</tr>
+		</table>
+	</div>
+	<input type="button" value="동의" onclick="chk()"/>
+	<input type="button" value="동의하지 않습니다" onclick="nochk()" />
+</form>
+
+
+	<script type="text/javascript">
+		function chk() {
+			var req = document.form.req.checked;
+			var req2 = document.form.req2.checked;
+			
+			var num = 0;
+			if (req == true && req2 == true) {
+				alert("약관에 동의하여 다음 페이지로 이동합니다.");
+				num = 1;
+			}
+			if (num == 1) {
+				location.href = "/register";
+			}else if(req != true){
+				alert("사이트 이용약관 동의를 확인 하세요. ")
+			}
+			else if(req2 != true){
+				alert("개인정보 수집 및 이용 동의를 확인 하세요.")
+			}
+			else {
+				alert("약관에 동의하셔야 합니다.");
+			}
+		}
+		function nochk() {
+			alert("동의하지 않으면 가입하실 수 없습니다");
+			location.href = "/";
+		}
+	</script>
+</body>
+</html>

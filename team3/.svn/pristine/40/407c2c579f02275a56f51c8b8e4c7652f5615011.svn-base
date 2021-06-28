@@ -1,0 +1,59 @@
+package net.yangchoo.repository;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
+
+import net.yangchoo.domain.ChatVO;
+import net.yangchoo.mapper.ChatMapper;
+
+@Repository
+public class ChatDaoImpl implements ChatDao {
+	
+//	@Autowired
+//	private ChatMapper chatMapper;
+//	
+//	// 전체 채팅방 조회
+//	@Override
+//	public List<ChatVO> chatRoomSelectAll(String chatId) {
+//		return chatMapper.chatRoomSelectAll(chatId);
+//	}
+//	
+//	// 채팅방 선택 조회
+//	@Override
+//	public ChatVO chatSelectOne(int chatRoomNo) {
+//		return chatMapper.chatSelectOne(chatRoomNo);
+//	}
+//	
+//	// 채팅방 업데이트
+//	@Override
+//	public int chatUpdate(ChatVO chatVO) {
+//		return chatMapper.chatUpdate(chatVO);
+//	}
+//	
+//	// 채팅방 삭제
+//	@Override
+//	public int chatDelete(int chatRoomNo) {
+//		return chatMapper.chatRoomDelete(chatRoomNo);
+//	}
+//	
+//	// 채팅방 첫 생성
+//	@Override
+//	public int ChatFirstInsert(String chatId) {
+//		return chatMapper.chatFirstInsert(chatId);
+//	}
+//
+//	// 생대 채팅방 생성
+//	@Override
+//	public int ChatTargetInsert(Integer chatRoomNo, String chatId) {
+//		return chatMapper.chatTargetRoomInsert(chatId);
+//	}
+//	
+//	// 현재 생성된 마지막 방번호 조회
+//	@Override
+//	public String ChatGetCurrentRoomNo() {
+//		return chatMapper.ChatGetCurrentRoomNo();
+//	}
+
+}

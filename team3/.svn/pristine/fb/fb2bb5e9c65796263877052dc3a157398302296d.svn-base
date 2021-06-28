@@ -1,0 +1,27 @@
+package net.yangchoo.controller;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+/**
+ * 로그인 페이지
+ * 
+ */
+@Controller
+public class LoginController {
+
+	@RequestMapping(value = "/memberLogin")
+	public String login() {
+		
+	
+	
+	return "memberLogin";
+
+	}
+	
+	@RequestMapping(value = "/memberTerms")
+	public String terms() {
+		
+		return "memberTerms";
+	}
+}
